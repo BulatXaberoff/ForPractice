@@ -50,7 +50,8 @@ namespace ForPractice
         {
             double res;
             res = Math.Exp(Math.Pow(x, 2) + Math.Pow(x, 2));
-            //res = 1/(25*(x*x+y*y)+1);
+            //res = 1 / (25 * (x * x + y * y) + 1);
+            //res = x*y;
             return res;
         }
 
@@ -84,7 +85,7 @@ namespace ForPractice
 
         private void Show_Graphic(PaintEventArgs e)
         {
-            const double h = 0.1;
+            double h = 0.2;
             const double h0 = -0.3;
             int i, j;
 
@@ -99,28 +100,50 @@ namespace ForPractice
             // рисование осей
             // ось X
             Zoom_XY(-0.3, 0, 0, out xx1, out yy1);
-            Zoom_XY(2, 0, 0, out xx2, out yy2);
+            Zoom_XY(2.5, 0, 0, out xx2, out yy2);
+
             e.Graphics.DrawLine(p, xx1, yy1, xx2, yy2);
             e.Graphics.DrawString("X", font, b, xx2 + 3, yy2);
 
             // ось Y
             Zoom_XY(0, -0.3, 0, out xx1, out yy1);
-            Zoom_XY(0, 2, 0, out xx2, out yy2);
+            Zoom_XY(0, 2.5, 0, out xx2, out yy2);
             e.Graphics.DrawLine(p, xx1, yy1, xx2, yy2);
             e.Graphics.DrawString("Y", font, b, xx2 + 3, yy2);
 
             // ось Z
             Zoom_XY(0, 0, -0.3, out xx1, out yy1);
-            Zoom_XY(0, 0, 2, out xx2, out yy2);
+            Zoom_XY(0, 0, 2.5, out xx2, out yy2);
             e.Graphics.DrawLine(p, xx1, yy1, xx2, yy2);
             e.Graphics.DrawString("Z", font, b, xx2 + 3, yy2 - 3);
 
+            b.Color = Color.Red;
+
+            for (i = 0; i <= 2; i++)
+            {
+                int t_X, t_Y;
+
+                Zoom_XY(i, 0, 0, out t_X, out t_Y);
+                e.Graphics.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
+                e.Graphics.DrawString(i.ToString(), font, b, t_X + 3, t_Y);
+
+                Zoom_XY(0, i, 0, out t_X, out t_Y);
+                e.Graphics.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
+                e.Graphics.DrawString(i.ToString(), font, b, t_X + 3, t_Y);
+
+                Zoom_XY(0, 0, i, out t_X, out t_Y);
+                e.Graphics.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
+                e.Graphics.DrawString(i.ToString(), font, b, t_X + 3, t_Y);
+            }
+
+
+
             // рисование поверхности
-            p.Color = Color.Red;
+            p.Color = Color.Black;
             p.Width = 1;
 
-            for (j = 0; j <= 11; j++)
-                for (i = 0; i <= 9; i++)
+            for (j = 0; j <= 3; j++)
+                for (i = 0; i <= 3; i++)
                 {
                     Zoom_XY(h0 + h * i, h0 + h * j, func(h0 + h * i, h0 + h * j),
                             out xx[0], out yy[0]);
@@ -134,6 +157,10 @@ namespace ForPractice
                     e.Graphics.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
                     e.Graphics.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
                     e.Graphics.DrawLine(p, xx[3], yy[3], xx[0], yy[0]);
+                    //e.Graphics.FillEllipse(Brushes.Black, xx[0], yy[0], 3, 3);
+                    //e.Graphics.FillEllipse(Brushes.Black, xx[1], yy[1], 3, 3);
+                    //e.Graphics.FillEllipse(Brushes.Black, xx[2], yy[2], 3, 3);
+                    //e.Graphics.FillEllipse(Brushes.Black, xx[3], yy[3], 3, 3);
                 }
 
             //for (j = 0; j <= 11; j++)
