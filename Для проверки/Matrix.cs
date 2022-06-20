@@ -23,9 +23,10 @@ namespace ForPractice
             this.data = new double[m, n];
         }
 
-        public Matrix(int m, int n, double[,] arr)
-          : this(m, n)
+        public Matrix(double[,] arr)
         {
+            this.m = arr.GetLength(0);
+            this.n=arr.GetLength(1);
             this.data = arr;
         }
 
@@ -200,13 +201,13 @@ namespace ForPractice
             return str;
         }
 
-        public Matrix FindSolveOverridenSLU(Matrix A, Matrix B)
+        static public Matrix FindSolveOverridenSLU(Matrix A, Matrix B)
         {
-            Matrix matrix1 = new Matrix(1, this.n);
-            Matrix matrix2 = A.Transposition();
-            Matrix matrix3 = matrix2 * A;
-            Matrix matrix4 = matrix2 * B;
-            return matrix3.InverseMatrix() * matrix4;
+            //Matrix solve = new Matrix(1, A.m);
+            Matrix AT = A.Transposition();
+            Matrix ATA = AT*A;
+            Matrix ATB = AT*B;
+            return ATA.InverseMatrix() * ATB;
         }
     }
 }
