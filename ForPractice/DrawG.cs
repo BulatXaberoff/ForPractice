@@ -12,6 +12,12 @@ namespace ForPractice
         private int xx1, xx2, yy1, yy2;
         private int[] xx = new int[4];
         private int[] yy = new int[4];
+
+        private double[] xInter = new double[4];
+        private double[] yInter = new double[4];
+        private double[,] zInter = new double[4,4];
+
+
         public int left;
         public int top;
         public int width;
@@ -22,7 +28,7 @@ namespace ForPractice
         public double A=-8;
         public bool f_show=false;
         public double alfa=10, beta=12;
-        List<(int[], int[])> coordinatesGraphicLists;
+        List<(double[], double[])> coordinatesGraphicLists;
 
 
 
@@ -37,14 +43,6 @@ namespace ForPractice
             gr = Graphics.FromImage(bitmap);
             clearSheet();
             X_min = -n; Y_min = -n+3; X_max = n; Y_max = n;
-            //blackPen = new Pen(Color.Black);
-            //blackPen.Width = 2;
-            //redPen = new Pen(Color.Red);
-            //redPen.Width = 2;
-            //darkGoldPen = new Pen(Color.DarkGoldenrod);
-            //darkGoldPen.Width = 2;
-            //fo = new Font("Arial", 15);
-            //br = Brushes.Black;
         }
         public Bitmap GetBitmap()
         {
@@ -64,7 +62,7 @@ namespace ForPractice
 
         public void drawGraphic()
         {
-            coordinatesGraphicLists = new List<(int[], int[])>();
+            coordinatesGraphicLists = new List<(double[], double[])>();
             double h = 1;
             const double h0 = -0.3;
             int i, j;
@@ -124,19 +122,31 @@ namespace ForPractice
             p.Width = 1;
 
             for (j = 0; j <= 1; j++)
+            {
+
                 for (i = 0; i <= 1; i++)
                 {
                     //var x = h0 + h * i;
                     //var y = h0 + h * j;
                     Zoom_XY(h0 + h * i, h0 + h * j, func(h0 + h * i, h0 + h * j),
                             out xx[0], out yy[0]);
+                    xInter[0] = h0 + h * i;
+                    yInter[0] = h0 + h * j;
+
                     Zoom_XY(h0 + h * i, h + h * j, func(h0 + h * i, h + h * j),
                             out xx[1], out yy[1]);
+                    xInter[1] = h0 + h * i;
+                    yInter[1] = h + h * j;
+
                     Zoom_XY(h + h * i, h + h * j, func(h + h * i, h + h * j),
                             out xx[2], out yy[2]);
+                    xInter[2] = h + h * i;
+                    yInter[2] = h + h * j;
                     Zoom_XY(h + h * i, h0 + h * j, func(h + h * i, h0 + h * j),
                             out xx[3], out yy[3]);
-                    coordinatesGraphicLists.Add((xx, yy));
+                    xInter[3] = h + h * i;
+                    yInter[3] = h0 + h * j;
+                    coordinatesGraphicLists.Add((xInter, yInter));
                     //gr.DrawLine(p, xx[0], yy[0], xx[1], yy[1]);
                     //gr.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
                     //gr.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
@@ -146,6 +156,7 @@ namespace ForPractice
                     gr.FillEllipse(Brushes.Black, xx[2], yy[2], 3, 3);
                     gr.FillEllipse(Brushes.Black, xx[3], yy[3], 3, 3);
                 }
+            }
 
             //for (j = 0; j <= 11; j++)
             //    for (i = 0; i <= 9; i++)
@@ -168,6 +179,7 @@ namespace ForPractice
         private void Zoom_XY(double x, double y, double z, out int xx, out int yy)
         {
             //double xn, yn, zn;
+
             double xn, yn;
             double tx, ty, tz;
             tx = (x - x0) * Math.Cos(alfa) - (y - y0) * Math.Sin(alfa);
