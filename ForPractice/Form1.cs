@@ -13,12 +13,21 @@ namespace ForPractice
     public partial class Form1 : Form
     {
         public DrawG G;
+        static int count = 0;
+        static double h=7;
+        static int nx = 3;
+        static int ny = 3;
+        static double n = 5;
+
         public Form1()
         {
             InitializeComponent();
             G = new DrawG(pictureBox1.Width, pictureBox1.Height);
-            G.drawGraphic();
+            G.drawGraphic(count, h, nx, ny,n);
             pictureBox1.Image = G.GetBitmap();
+            //G=new DrawG(pictureBox2.Width, pictureBox2.Height);
+            //G.drawGraphic(count, h, nx, ny, n);
+            //pictureBox2.Image = G.GetBitmap();
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -26,25 +35,29 @@ namespace ForPractice
             if (e.KeyData == Keys.Down)
             {
                 G.beta = G.beta - 0.1;
-                G.InvalidGraphic();
+                G.InvalidGraphic(count, h,nx,ny, n);
                 pictureBox1.Image = G.GetBitmap();
+                pictureBox2.Image = G.GetBitmap();
             }
             if (e.KeyData == Keys.Up)
             {
                 G.beta = G.beta + 0.1;
-                G.InvalidGraphic();
+                G.InvalidGraphic(count, h, nx, ny, n);
+                pictureBox2.Image = G.GetBitmap();
                 pictureBox1.Image = G.GetBitmap();
             }
             if (e.KeyData == Keys.Right)
             {
                 G.alfa = G.alfa + 0.1;
-                G.InvalidGraphic();
+                G.InvalidGraphic(count, h, nx, ny, n);
+                pictureBox2.Image = G.GetBitmap();
                 pictureBox1.Image = G.GetBitmap();
             }
             if (e.KeyData == Keys.Left)
             {
                 G.alfa = G.alfa - 0.1;
-                G.InvalidGraphic();
+                G.InvalidGraphic(count, h, nx, ny, n);
+                pictureBox2.Image = G.GetBitmap();
                 pictureBox1.Image = G.GetBitmap();
             }
             if (e.KeyData == Keys.Escape)
@@ -80,6 +93,55 @@ namespace ForPractice
                     }
                 }
             }
+            if(e.KeyData == Keys.D0)
+            {
+                count++;
+                count %= 8;
+                G.InvalidGraphic(count,h, nx, ny, n);
+                pictureBox2.Image = G.GetBitmap();
+                pictureBox1.Image = G.GetBitmap();
+            }
+            if(e.KeyData == Keys.Enter)
+            {
+                numericUpDown1.Enabled = false;
+
+            }
         }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            h=((double)numericUpDown1.Value);
+            G.InvalidGraphic(count, h, nx, ny, n);
+            pictureBox1.Image = G.GetBitmap();
+        }
+        private void numericUpDown2_ValueChanged(object sender, EventArgs e)
+        {
+            nx = (int)numericUpDown2.Value;
+            ny = (int)numericUpDown2.Value;
+            G.InvalidGraphic(count, h, nx, ny, n);
+            pictureBox1.Image = G.GetBitmap();
+        }
+        private void numericUpDown3_ValueChanged(object sender, EventArgs e)
+        {
+            n = (double)numericUpDown3.Value;
+            G.InvalidGraphic(count, h, nx, ny, n);
+            pictureBox1.Image = G.GetBitmap();
+
+        }
+        private void panel1_MouseClick(object sender, MouseEventArgs e)
+        {
+            numericUpDown1.Enabled = true;
+            numericUpDown2.Enabled = true;
+            numericUpDown3.Enabled = true;
+        }
+
+        private void panel1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            numericUpDown1.Enabled = false;
+            numericUpDown2.Enabled = false;
+            numericUpDown3.Enabled = false;
+        }
+
+
     }
 }

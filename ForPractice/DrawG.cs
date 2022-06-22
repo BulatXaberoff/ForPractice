@@ -9,26 +9,28 @@ namespace ForPractice
 {
     public class DrawG
     {
+        static int c = 0;
+
         private int xx1, xx2, yy1, yy2;
         private int[] xx = new int[4];
         private int[] yy = new int[4];
 
         private double[] xInter = new double[4];
         private double[] yInter = new double[4];
-        private double[,] zInter = new double[4,4];
+        private double[] zInter = new double[4];
 
 
         public int left;
         public int top;
         public int width;
         public int height;
-        int n = 5;
+        double n = 5;
         public double X_min, Y_min, X_max, Y_max;
         public double x0=0, y0=0, z0=0;
         public double A=-8;
         public bool f_show=false;
         public double alfa=10, beta=12;
-        List<(double[], double[])> coordinatesGraphicLists;
+        public List<(double[], double[],double[])> coordinatesGraphicLists;
 
 
 
@@ -53,20 +55,24 @@ namespace ForPractice
         {
             gr.Clear(Color.White);
         }
-
-        public void InvalidGraphic()
+        public void InvalidGraphic(int count,double h=1.0,int nx = 3, int ny = 3,double n=5.0)
         {
             clearSheet();
-            drawGraphic();
+            drawGraphic(count,h, nx,ny,n);
         }
 
-        public void drawGraphic()
+        public void drawGraphic(int count,double h=4.0,int nx=3,int ny=3,double n=5.0)
         {
-            coordinatesGraphicLists = new List<(double[], double[])>();
-            double h = 1;
+            
+            c = count;
+            coordinatesGraphicLists = new List<(double[], double[],double[])>();
+            h = 1 / h;
+            this.n = n;
+            X_min = -n; Y_min = -n + 3; X_max = n; Y_max = n;
+
             const double h0 = -0.3;
             int i, j;
-
+            #region 
             //Rectangle r1 = new Rectangle(left, top, left + width, top + height);
             Pen p = new Pen(Color.Black);
             //e.Graphics.DrawRectangle(p, r1);
@@ -75,9 +81,10 @@ namespace ForPractice
             Font font = new Font("Courier New", 12, FontStyle.Bold);
             SolidBrush b = new SolidBrush(Color.Blue);
 
+            #endregion
+            #region Рисование осей
             // рисование осей
             // ось X
-            #region
             Zoom_XY(-0.3, 0, 0, out xx1, out yy1);
             Zoom_XY(2.5, 0, 0, out xx2, out yy2);
 
@@ -120,33 +127,63 @@ namespace ForPractice
             // рисование поверхности
             p.Color = Color.Black;
             p.Width = 1;
-
-            for (j = 0; j <= 1; j++)
+            double t =10.0 / nx;
+            for (j = 0; j <= nx; j++)
             {
-
-                for (i = 0; i <= 1; i++)
+                for (i = 0; i <= ny; i++)
                 {
                     //var x = h0 + h * i;
                     //var y = h0 + h * j;
-                    Zoom_XY(h0 + h * i, h0 + h * j, func(h0 + h * i, h0 + h * j),
+                    #region начальный метод построения по i,j
+                    //Zoom_XY(h0 + h * i, h0 + h * j, func(h0 + h * i, h0 + h * j),
+                    //        out xx[0], out yy[0]);
+                    //xInter[0] = h0 + h * i;
+                    //yInter[0] = h0 + h * j;
+                    //zInter[0] = func(h0 + h * i, h0 + h * j);
+
+                    //Zoom_XY(h0 + h * i, h + h * j, func(h0 + h * i, h + h * j),
+                    //        out xx[1], out yy[1]);
+                    //xInter[1] = h0 + h * i;
+                    //yInter[1] = h + h * j;
+                    //zInter[1] = func(h0 + h * i, h + h * j);
+
+                    //Zoom_XY(h + h * i, h + h * j, func(h + h * i, h + h * j),
+                    //        out xx[2], out yy[2]);
+                    //xInter[2] = h + h * i;
+                    //yInter[2] = h + h * j;
+                    //yInter[2] = func(h + h * i, h + h * j);
+
+                    //Zoom_XY(h + h * i, h0 + h * j, func(h + h * i, h0 + h * j),
+                    //        out xx[3], out yy[3]);
+                    //xInter[3] = h + h * i;
+                    //yInter[3] = h0 + h * j;
+                    //zInter[3]= func(h + h * i, h0 + h * j);
+                    #endregion
+                    Zoom_XY(h0 + h * i*t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
                             out xx[0], out yy[0]);
                     xInter[0] = h0 + h * i;
                     yInter[0] = h0 + h * j;
+                    zInter[0] = func(h0 + h * i, h0 + h * j);
 
-                    Zoom_XY(h0 + h * i, h + h * j, func(h0 + h * i, h + h * j),
+                    Zoom_XY(h0 + h * i * t, h + h * j * t, func(h0 + h * i * t, h + h * j * t),
                             out xx[1], out yy[1]);
                     xInter[1] = h0 + h * i;
                     yInter[1] = h + h * j;
+                    zInter[1] = func(h0 + h * i, h + h * j);
 
-                    Zoom_XY(h + h * i, h + h * j, func(h + h * i, h + h * j),
+                    Zoom_XY(h + h * i * t, h + h * j * t, func(h + h * i * t, h + h * j * t),
                             out xx[2], out yy[2]);
                     xInter[2] = h + h * i;
                     yInter[2] = h + h * j;
-                    Zoom_XY(h + h * i, h0 + h * j, func(h + h * i, h0 + h * j),
+                    yInter[2] = func(h + h * i, h + h * j);
+
+                    Zoom_XY(h + h * i * t, h0 + h * j * t, func(h + h * i * t, h0 + h * j * t),
                             out xx[3], out yy[3]);
                     xInter[3] = h + h * i;
                     yInter[3] = h0 + h * j;
-                    coordinatesGraphicLists.Add((xInter, yInter));
+                    zInter[3] = func(h + h * i, h0 + h * j);
+
+                    //coordinatesGraphicLists.Add((xInter, yInter,zInter));
                     //gr.DrawLine(p, xx[0], yy[0], xx[1], yy[1]);
                     //gr.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
                     //gr.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
@@ -176,6 +213,15 @@ namespace ForPractice
             //    }
         }
 
+
+
+
+
+
+
+
+
+
         private void Zoom_XY(double x, double y, double z, out int xx, out int yy)
         {
             //double xn, yn, zn;
@@ -195,10 +241,34 @@ namespace ForPractice
         }
         private double func(double x, double y)
         {
-            double res;
-            //res = Math.Exp(Math.Pow(x, 2) + Math.Pow(x, 2));
-            //res = 1 / (25 * (x * x + y * y) + 1);
-            res = x;
+            double res = 0;
+            switch (c)
+            {
+                case 0:
+                    res = 1;
+                    break;
+                case 1:
+                    res = x;
+                    break;
+                case 2:
+                    res = y;
+                    break;
+                case 3:
+                    res = x + y;
+                    break;
+                case 4:
+                    res=Math.Sqrt(Math.Pow(x,2)+Math.Pow(y,2));
+                    break;
+                case 5:
+                    res = Math.Pow(x, 2) + Math.Pow(y, 2);
+                    break;
+                case 6:
+                    res = Math.Exp(Math.Pow(x, 2) - Math.Pow(y, 2));
+                    break;
+                case 7:
+                    res = 1 / (25 * (Math.Pow(x, 2) + Math.Pow(y, 2)) + 1);
+                    break;
+            }
             return res;
         }
     }
