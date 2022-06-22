@@ -54,35 +54,27 @@
 //Console.WriteLine((object)matrix7);
 #endregion
 var size = 6;
+double x0 = 0.3;
+double y0 = 0.4;
 double[] x = FillArr(size);
 Showarr(x);
 double[] y = FillArr(size);
 Showarr(y);
 Console.WriteLine();
 double[,] z = Func(x, y);
+
 //Showarr(z);
 //Console.WriteLine(LagrangePolynomial(0.7, 0.1, x, y, z));
 //Console.WriteLine(LagrangePolynomial(0.2, 0.1, x, y, z));
-double[] a = new double[size];
-double[] temp = new double[size];
+InterpolateLagrange3D(x0, y0, x, y, z, size);
+InterpolateLagrange3D(x0 + 1, y0 + 1, x, y, z, size);
+InterpolateLagrange3D(x0 + 2, y0 + 2, x, y, z, size);
 
-for (int i = 0; i < size; i++)
-{
-    for (int j = 0; j < size; j++)
-    {
-        temp[j]=z[i,j];
-    }
-    a[i] = InterpolateLagrangePolynomial(1.7, x, temp, size);
-}
-Console.WriteLine(InterpolateLagrangePolynomial(0.1,y,a, size));
-
-
-
-static void Showarr(double []arr)
+static void Showarr(double[] arr)
 {
     for (int i = 0; i < arr.Length; i++)
     {
-        Console.Write(arr[i]+" ");
+        Console.Write(arr[i] + " ");
     }
     Console.WriteLine();
 }
@@ -98,15 +90,15 @@ static double[] FillArr(int size)
     return arr;
 }
 
-static double[,] Func(double []x,double[]y)
+static double[,] Func(double[] x, double[] y)
 {
-    double [,]z = new double[x.Length,y.Length];
+    double[,] z = new double[x.Length, y.Length];
     for (int i = 0; i < x.Length; i++)
     {
         for (int j = 0; j < x.Length; j++)
         {
             z[i, j] = Math.Exp(x[j] + y[i]);
-            Console.Write(z[i, j]+" ");
+            Console.Write(z[i, j] + " ");
         }
         Console.WriteLine();
     }
@@ -116,16 +108,16 @@ static double[,] Func(double []x,double[]y)
 static double LagrangePolynomial(double x, double y, double[] xval, double[] yval, double[] zval)
 {
     double lagraPol = 0;
-    var size=xval.Length;
-    double []a=new double[size];
+    var size = xval.Length;
+    double[] a = new double[size];
     for (int i = 0; i < size; i++)
     {
         double basicsPol = 1;
         for (int j = 0; j < size; j++)
         {
-            if (i!=j)
+            if (i != j)
             {
-                basicsPol *= (x - xval[j]) * (y - yval[j]) / ((xval[i]-xval[j])*(yval[i]-yval[j]));
+                basicsPol *= (x - xval[j]) * (y - yval[j]) / ((xval[i] - xval[j]) * (yval[i] - yval[j]));
             }
         }
         lagraPol += basicsPol;
@@ -151,4 +143,20 @@ static double InterpolateLagrangePolynomial(double x, double[] xValues, double[]
     }
 
     return lagrangePol;
+}
+
+static void InterpolateLagrange3D(double x0,double y0, double[] x, double[] y, double[,] z, int size)
+{
+    double[] a = new double[size];
+    double[] temp = new double[size];
+
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            temp[j] = z[i, j];
+        }
+        a[i] = InterpolateLagrangePolynomial(x0, x, temp, size);
+    }
+    Console.WriteLine(InterpolateLagrangePolynomial(y0, y, a, size));
 }
