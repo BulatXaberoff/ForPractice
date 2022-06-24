@@ -15,17 +15,17 @@ namespace ForPractice
         public DrawG G;
         static int count = 0;
         static double h=7;
-        static int nx = 3;
-        static int ny = 3;
+        static int nx = 5;
+        static int ny = 5;
         static double n = 5;
 
         public Form1()
         {
             InitializeComponent();
             G = new DrawG(pictureBox1.Width, pictureBox1.Height);
-            G.drawGraphic(count+7, h, nx, ny,n);
+            G.drawGraphic(count+3, h, nx, ny,n);
             pictureBox1.Image = G.GetBitmap();
-            G.ApproximateGraphic();
+            G.InterpolateGraphic();
             //G=new DrawG(pictureBox2.Width, pictureBox2.Height);
             //G.drawGraphic(count, h, nx, ny, n);
             //pictureBox2.Image = G.GetBitmap();

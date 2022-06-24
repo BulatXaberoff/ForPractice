@@ -30,7 +30,7 @@ namespace ForPractice
         public double A=-8;
         public bool f_show=false;
         public double alfa=10, beta=12;
-        public List<(double[], double[],double[])> coordinatesGraphicLists;
+        public List<(double, double,double)> coordinatesGraphicLists;
 
 
 
@@ -65,7 +65,7 @@ namespace ForPractice
         {
             
             c = count;
-            coordinatesGraphicLists = new List<(double[], double[],double[])>();
+            coordinatesGraphicLists = new List<(double, double,double)>();
             h = 1 / h;
             this.n = n;
             X_min = -n; Y_min = -n + 3; X_max = n; Y_max = n;
@@ -161,40 +161,41 @@ namespace ForPractice
                     #endregion
                     Zoom_XY(h0 + h * i*t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
                             out xx[0], out yy[0]);
-                    xInter[0] = h0 + h * i;
-                    yInter[0] = h0 + h * j;
-                    zInter[0] = func(h0 + h * i, h0 + h * j);
+                    xInter[0] = h0 + h * i * t;
+                    yInter[0] = h0 + h * j * t;
+                    zInter[0] = func(h0 + h * i * t, h0 + h * j * t);
 
-                    Zoom_XY(h0 + h * i * t, h + h * j * t, func(h0 + h * i * t, h + h * j * t),
-                            out xx[1], out yy[1]);
-                    xInter[1] = h0 + h * i;
-                    yInter[1] = h + h * j;
-                    zInter[1] = func(h0 + h * i, h + h * j);
+                    //Zoom_XY(h0 + h * i * t, h + h * j * t, func(h0 + h * i * t, h + h * j * t),
+                    //        out xx[1], out yy[1]);
+                    //xInter[1] = h0 + h * i * t;
+                    //yInter[1] = h + h * j * t;
+                    //zInter[1] = func(h0 + h * i * t, h + h * j * t);
 
-                    Zoom_XY(h + h * i * t, h + h * j * t, func(h + h * i * t, h + h * j * t),
-                            out xx[2], out yy[2]);
-                    xInter[2] = h + h * i;
-                    yInter[2] = h + h * j;
-                    yInter[2] = func(h + h * i, h + h * j);
+                    //Zoom_XY(h + h * i * t, h + h * j * t, func(h + h * i * t, h + h * j * t),
+                    //        out xx[2], out yy[2]);
+                    //xInter[2] = h + h * i * t;
+                    //yInter[2] = h + h * j * t;
+                    //yInter[2] = func(h + h * i * t, h + h * j * t);
 
-                    Zoom_XY(h + h * i * t, h0 + h * j * t, func(h + h * i * t, h0 + h * j * t),
-                            out xx[3], out yy[3]);
-                    xInter[3] = h + h * i;
-                    yInter[3] = h0 + h * j;
-                    zInter[3] = func(h + h * i, h0 + h * j);
+                    //Zoom_XY(h + h * i * t, h0 + h * j * t, func(h + h * i * t, h0 + h * j * t),
+                    //        out xx[3], out yy[3]);
+                    //xInter[3] = h + h * i * t;
+                    //yInter[3] = h0 + h * j * t;
+                    //zInter[3] = func(h + h * i * t, h0 + h * j * t);
 
-                    coordinatesGraphicLists.Add((xInter, yInter, zInter));
+                    coordinatesGraphicLists.Add((h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t)));
+
                     //gr.DrawLine(p, xx[0], yy[0], xx[1], yy[1]);
                     //gr.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
                     //gr.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
                     //gr.DrawLine(p, xx[3], yy[3], xx[0], yy[0]);
                     gr.FillEllipse(Brushes.Black, xx[0], yy[0], 3, 3);
-                    gr.FillEllipse(Brushes.Black, xx[1], yy[1], 3, 3);
-                    gr.FillEllipse(Brushes.Black, xx[2], yy[2], 3, 3);
-                    gr.FillEllipse(Brushes.Black, xx[3], yy[3], 3, 3);
+                    //gr.FillEllipse(Brushes.Black, xx[1], yy[1], 3, 3);
+                    //gr.FillEllipse(Brushes.Black, xx[2], yy[2], 3, 3);
+                    //gr.FillEllipse(Brushes.Black, xx[3], yy[3], 3, 3);
                 }
             }
-
+            #region
             //for (j = 0; j <= 11; j++)
             //    for (i = 0; i <= 9; i++)
             //    {
@@ -211,47 +212,77 @@ namespace ForPractice
             //        e.Graphics.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
             //        e.Graphics.DrawLine(p, xx[3], yy[3], xx[0], yy[0]);
             //    }
+            #endregion
         }
 
-
+        private double[,] Func(double[] x, double[] y)
+        {
+            double[,] z = new double[x.Length, y.Length];
+            for (int i = 0; i < x.Length; i++)
+            {
+                for (int j = 0; j < x.Length; j++)
+                {
+                    z[i, j] = func(x[i],y[i]);
+                    //Console.Write(z[i, j] + " ");
+                }
+                //Console.WriteLine();
+            }
+            return z;
+        }
 
         public void InterpolateGraphic()
         {
-
-
-        }
-
-        public void ApproximateGraphic()
-        {
-            double[] arrx; double[] arry; double[] arrz;
-            var temp = coordinatesGraphicLists;
-            PasteArray(out arrx,out arry,out arrz);
-
-            Matrix x = new Matrix(arrx);
-            Matrix y = new Matrix(arry);
-            //x = x.ToAddColumn(y);
-            Matrix z = new Matrix(arrz);
-            var res = Matrix.FindApproximationFunc(x,y, z);
+            var t = coordinatesGraphicLists;
+            var zInter_ = Func(xInter, yInter);
+            var temp = Lagrange.InterpolateLagrange3D(0.1, 0.1, xInter, yInter, zInter_, xInter.Length);
 
         }
-
-        public void PasteArray(out double[]arrx, out double[] arry, out double[] arrz, int nx=4, int ny=4, int nz=4)
+        private void ToArr(out double[] arrx, out double[] arry, out double[] arrz)
         {
-            arrx = new double[coordinatesGraphicLists.Count * nx];
-            arry = new double[coordinatesGraphicLists.Count * ny];
-            arrz = new double[coordinatesGraphicLists.Count * nz];
+            int size=coordinatesGraphicLists.Count;
+            arrx = new double[size];
+            arry = new double[size];
+            arrz = new double[size];
             int count = 0;
             foreach (var item in coordinatesGraphicLists)
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    arrx[count] = item.Item1[i];
-                    arry[count] = item.Item2[i];
-                    arrz[count] = item.Item3[i];
-                    count++;
-                }
+                arrx[count] = item.Item1;
+                arry[count] = item.Item2;
+                arrx[count] = item.Item3;
             }
         }
+
+        //public void ApproximateGraphic()
+        //{
+        //    double[] arrx; double[] arry; double[] arrz;
+        //    var temp = coordinatesGraphicLists;
+        //    //PasteArray(out arrx,out arry,out arrz);
+
+        //    Matrix x = new Matrix(arrx);
+        //    Matrix y = new Matrix(arry);
+        //    //x = x.ToAddColumn(y);
+        //    Matrix z = new Matrix(arrz);
+        //    var res = Matrix.FindApproximationFunc(x,y, z);
+
+        //}
+
+        //public void PasteArray(out double[]arrx, out double[] arry, out double[] arrz, int nx=4, int ny=4, int nz=4)
+        //{
+        //    arrx = new double[coordinatesGraphicLists.Count * nx];
+        //    arry = new double[coordinatesGraphicLists.Count * ny];
+        //    arrz = new double[coordinatesGraphicLists.Count * nz];
+        //    int count = 0;
+        //    foreach (var item in coordinatesGraphicLists)
+        //    {
+        //        for (int i = 0; i < 4; i++)
+        //        {
+        //            arrx[count] = item.Item1[i];
+        //            arry[count] = item.Item2[i];
+        //            arrz[count] = item.Item3[i];
+        //            count++;
+        //        }
+        //    }
+        //}
 
 
         private void Zoom_XY(double x, double y, double z, out int xx, out int yy)

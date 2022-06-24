@@ -1,48 +1,48 @@
 ﻿using ForPractice;
 #region
-double[,] arr1 = new double[5, 3]
-{
-  {
-    2.5,
-    -3.0,
-    1.2
-  },
-  {
-    3.7,
-    -2.0,
-    4.1
-  },
-  {
-    2.6,
-    -1.1,
-    5.9
-  },
-  {
-    4.9,
-    0.0,
-    3.3
-  },
-  {
-    7.4,
-    1.8,
-    5.7
-  }
-};
-double[,] arr2 = new double[1, 5]
-{
-  {
-    13.2,
-    10.2,
-    8.7,
-    5.5,
-    12.2
-  }
-};
-Matrix matrix1 = new Matrix(arr1);
-matrix1 = matrix1.Transposition();
+//double[,] arr1 = new double[5, 3]
+//{
+//  {
+//    2.5,
+//    -3.0,
+//    1.2
+//  },
+//  {
+//    3.7,
+//    -2.0,
+//    4.1
+//  },
+//  {
+//    2.6,
+//    -1.1,
+//    5.9
+//  },
+//  {
+//    4.9,
+//    0.0,
+//    3.3
+//  },
+//  {
+//    7.4,
+//    1.8,
+//    5.7
+//  }
+//};
+//double[,] arr2 = new double[1, 5]
+//{
+//  {
+//    13.2,
+//    10.2,
+//    8.7,
+//    5.5,
+//    12.2
+//  }
+//};
+//Matrix matrix1 = new Matrix(arr1);
+//matrix1 = matrix1.Transposition();
 
-Matrix matrix2 = new Matrix(arr2);
-Console.WriteLine(Matrix.FindSolveOverridenSLU(matrix1, matrix2));
+//Matrix matrix2 = new Matrix(arr2);
+//Console.WriteLine(Matrix.FindSolveOverridenSLU(matrix1, matrix2));
 //Matrix matrix3 = matrix1.Transposition();
 //Matrix matrix4 = matrix1 * matrix3;
 //Matrix matrix5 = matrix1 * matrix2;
@@ -53,22 +53,24 @@ Console.WriteLine(Matrix.FindSolveOverridenSLU(matrix1, matrix2));
 //Console.WriteLine((object)matrix6);
 //Console.WriteLine((object)matrix7);
 #endregion
-//var size = 6;
-//double x0 = 0.3;
-//double y0 = 0.4;
-//double[] x = FillArr(size);
-//Showarr(x);
-//double[] y = FillArr(size);
-//Showarr(y);
-//Console.WriteLine();
-//double[,] z = Func(x, y);
+var size = 4;
+double x0 = 0.5;
+double y0 = 1.2;
+double[] x = FillArr(size);
+Showarr(x);
+double[] y = FillArr(size);
+Showarr(y);
+Console.WriteLine();
+double[,] z = Func(x, y);
 
-//Showarr(z);
+////Showarr(z);
 //Console.WriteLine(LagrangePolynomial(0.7, 0.1, x, y, z));
 //Console.WriteLine(LagrangePolynomial(0.2, 0.1, x, y, z));
-//InterpolateLagrange3D(x0, y0, x, y, z, size);
-//InterpolateLagrange3D(x0 + 1, y0 + 1, x, y, z, size);
-//InterpolateLagrange3D(x0 + 2, y0 + 2, x, y, z, size);
+Console.WriteLine();
+for (int i = 0; i < 1; i++)
+{
+    InterpolateLagrange3D(x0+i, y0+i, x, y, z, size);
+}
 
 static void Showarr(double[] arr)
 {
@@ -85,7 +87,8 @@ static double[] FillArr(int size)
     double[] arr = new double[size];
     for (int i = 1; i < arr.Length; i++)
     {
-        arr[i] = i;
+        var t = i % 2;
+        arr[i] = t;
     }
     return arr;
 }
@@ -97,7 +100,7 @@ static double[,] Func(double[] x, double[] y)
     {
         for (int j = 0; j < x.Length; j++)
         {
-            z[i, j] = Math.Exp(x[j] + y[i]);
+            z[i, j] = Math.Exp(x[i] * y[j]);
             Console.Write(z[i, j] + " ");
         }
         Console.WriteLine();
