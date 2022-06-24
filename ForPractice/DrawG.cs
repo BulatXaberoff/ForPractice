@@ -183,7 +183,7 @@ namespace ForPractice
                     yInter[3] = h0 + h * j;
                     zInter[3] = func(h + h * i, h0 + h * j);
 
-                    //coordinatesGraphicLists.Add((xInter, yInter,zInter));
+                    coordinatesGraphicLists.Add((xInter, yInter, zInter));
                     //gr.DrawLine(p, xx[0], yy[0], xx[1], yy[1]);
                     //gr.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
                     //gr.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
@@ -215,11 +215,43 @@ namespace ForPractice
 
 
 
+        public void InterpolateGraphic()
+        {
 
 
+        }
 
+        public void ApproximateGraphic()
+        {
+            double[] arrx; double[] arry; double[] arrz;
+            var temp = coordinatesGraphicLists;
+            PasteArray(out arrx,out arry,out arrz);
 
+            Matrix x = new Matrix(arrx);
+            Matrix y = new Matrix(arry);
+            //x = x.ToAddColumn(y);
+            Matrix z = new Matrix(arrz);
+            var res = Matrix.FindApproximationFunc(x,y, z);
 
+        }
+
+        public void PasteArray(out double[]arrx, out double[] arry, out double[] arrz, int nx=4, int ny=4, int nz=4)
+        {
+            arrx = new double[coordinatesGraphicLists.Count * nx];
+            arry = new double[coordinatesGraphicLists.Count * ny];
+            arrz = new double[coordinatesGraphicLists.Count * nz];
+            int count = 0;
+            foreach (var item in coordinatesGraphicLists)
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    arrx[count] = item.Item1[i];
+                    arry[count] = item.Item2[i];
+                    arrz[count] = item.Item3[i];
+                    count++;
+                }
+            }
+        }
 
 
         private void Zoom_XY(double x, double y, double z, out int xx, out int yy)

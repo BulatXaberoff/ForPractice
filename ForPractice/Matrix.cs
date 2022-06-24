@@ -22,7 +22,17 @@ namespace ForPractice
             this.n = n;
             this.data = new double[m, n];
         }
-
+        public Matrix(double[] arr)
+        {
+            m = 1;
+            n = arr.Length;
+            double[,] newarr = new double[m, n];
+            for (int i = 0; i < n; i++)
+            {
+                newarr[0, i] = arr[i];
+            }
+            data = newarr;
+        }
         public Matrix(double[,] arr)
         {
             this.m = arr.GetLength(0);
@@ -207,6 +217,61 @@ namespace ForPractice
             Matrix aTA = aT * A;
             Matrix aTB = aT * B;
             return aTA.InverseMatrix() * aTB;
+        }
+        static public Matrix FindApproximationFunc(Matrix X,Matrix Y,Matrix Z)
+        {
+            Matrix W = new Matrix(1, X.n);
+            for (int i = 0; i < X.n; i++)
+            {
+                W[0, i] = 1;
+            }
+            W = W.ToAddColumn(X.ToLog());
+            W = W.ToAddColumn(Y.ToLog());
+            var Q = Z.ToLog();
+            return FindSolveOverridenSLU(W, Q);
+        }
+        public Matrix ToLog()
+        {
+            Matrix logMatrix = new Matrix(this.m, this.n);
+            for (int i = 0; i < this.m; i++)
+            {
+                for (int j = 0; j < this.n; j++)
+                {
+                    if (this[i,j]<=0)
+                    {
+                        continue;
+                    }
+                    logMatrix[i,j] = Math.Log(this[i, j]);
+                }
+            }
+            return logMatrix;
+        }
+        public Matrix ToAddColumn(Matrix A)
+        {
+            Matrix newMatrix = new Matrix(A.m + m, n);
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    newMatrix[i,j]=this[i,j];
+                }
+            }
+            for (int i = m; i < A.m+m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    newMatrix[i, j] = A[i-m, j];
+                }
+            }
+            //for (int i = 0; i < n; i++)
+            //{
+            //    newMatrix[0, i] = this[0, i];
+            //}
+            //for (int i = 0; i < n; i++)
+            //{
+            //    newMatrix[1, i] = A[0, i];
+            //}
+            return newMatrix;
         }
     }
 }

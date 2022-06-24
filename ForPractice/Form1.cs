@@ -23,8 +23,9 @@ namespace ForPractice
         {
             InitializeComponent();
             G = new DrawG(pictureBox1.Width, pictureBox1.Height);
-            G.drawGraphic(count, h, nx, ny,n);
+            G.drawGraphic(count+7, h, nx, ny,n);
             pictureBox1.Image = G.GetBitmap();
+            G.ApproximateGraphic();
             //G=new DrawG(pictureBox2.Width, pictureBox2.Height);
             //G.drawGraphic(count, h, nx, ny, n);
             //pictureBox2.Image = G.GetBitmap();
