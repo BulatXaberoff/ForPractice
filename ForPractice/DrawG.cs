@@ -19,6 +19,8 @@ namespace ForPractice
         private double[] yInter = new double[4];
         private double[] zInter = new double[4];
 
+        private double[] InterpolateResults;
+
 
         public int left;
         public int top;
@@ -37,14 +39,19 @@ namespace ForPractice
         Bitmap bitmap;
         Graphics gr;
 
-        public DrawG(int width,int height)
+        public DrawG(int width,int height,List<(double, double, double)> coord=null)
         {
             this.width = width;
             this.height = height;
+            this.coordinatesGraphicLists = coord;
             bitmap = new Bitmap(width+10, height);
             gr = Graphics.FromImage(bitmap);
             clearSheet();
             X_min = -n; Y_min = -n+3; X_max = n; Y_max = n;
+        }
+        public List<(double, double, double)> GetCoordinates()
+        {
+            return coordinatesGraphicLists;
         }
         public Bitmap GetBitmap()
         {
@@ -63,16 +70,16 @@ namespace ForPractice
 
         public void drawGraphic(int count,double h=4.0,int nx=3,int ny=3,double n=5.0)
         {
-            
+
             c = count;
-            coordinatesGraphicLists = new List<(double, double,double)>();
+            coordinatesGraphicLists = new List<(double, double, double)>();
             h = 1 / h;
             this.n = n;
             X_min = -n; Y_min = -n + 3; X_max = n; Y_max = n;
 
             const double h0 = -0.3;
             int i, j;
-            #region 
+            #region Шрифт
             //Rectangle r1 = new Rectangle(left, top, left + width, top + height);
             Pen p = new Pen(Color.Black);
             //e.Graphics.DrawRectangle(p, r1);
@@ -82,52 +89,18 @@ namespace ForPractice
             SolidBrush b = new SolidBrush(Color.Blue);
 
             #endregion
-            #region Рисование осей
-            // рисование осей
-            // ось X
-            Zoom_XY(-0.3, 0, 0, out xx1, out yy1);
-            Zoom_XY(2.5, 0, 0, out xx2, out yy2);
-
-            gr.DrawLine(p, xx1, yy1, xx2, yy2);
-            gr.DrawString("X", font, b, xx2 + 3, yy2);
-
-            // ось Y
-            Zoom_XY(0, -0.3, 0, out xx1, out yy1);
-            Zoom_XY(0, 2.5, 0, out xx2, out yy2);
-            gr.DrawLine(p, xx1, yy1, xx2, yy2);
-            gr.DrawString("Y", font, b, xx2 + 3, yy2);
-
-            // ось Z
-            Zoom_XY(0, 0, -0.3, out xx1, out yy1);
-            Zoom_XY(0, 0, 2.5, out xx2, out yy2);
-            gr.DrawLine(p, xx1, yy1, xx2, yy2);
-            gr.DrawString("Z", font, b, xx2 + 3, yy2 - 3);
-
-            b.Color = Color.Red;
-
-            for (i = 0; i <= 2; i++)
-            {
-                int t_X, t_Y;
-
-                Zoom_XY(i, 0, 0, out t_X, out t_Y);
-                gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
-                gr.DrawString(i.ToString(), font, b, t_X + 3, t_Y);
-
-                Zoom_XY(0, i, 0, out t_X, out t_Y);
-                gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
-                gr.DrawString(i.ToString(), font, b, t_X + 3, t_Y);
-
-                Zoom_XY(0, 0, i, out t_X, out t_Y);
-                gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
-                gr.DrawString(i.ToString(), font, b, t_X + 3, t_Y);
-            }
-
-            #endregion
+            DrawAxis(p, font, b); //Рисование Осей
 
             // рисование поверхности
             p.Color = Color.Black;
             p.Width = 1;
-            double t =10.0 / nx;
+            double t = 10.0 / nx;
+            for (j = 0; j < ny; j++)
+            {
+                coordinatesGraphicLists.Add((h0 + h * j * t, h0 + h * j * t, func(h0 + h * j * t, h0 + h * j * t)));
+            }
+
+
             for (j = 0; j <= nx; j++)
             {
                 for (i = 0; i <= ny; i++)
@@ -159,11 +132,12 @@ namespace ForPractice
                     //yInter[3] = h0 + h * j;
                     //zInter[3]= func(h + h * i, h0 + h * j);
                     #endregion
-                    Zoom_XY(h0 + h * i*t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
+                    Zoom_XY(h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
                             out xx[0], out yy[0]);
-                    xInter[0] = h0 + h * i * t;
-                    yInter[0] = h0 + h * j * t;
-                    zInter[0] = func(h0 + h * i * t, h0 + h * j * t);
+                    //coordinatesGraphicLists.Add((h0 + h * i * t, h0 + h * i * t, func(h0 + h * i * t, h0 + h * i * t)));
+                    //xInter[0] = h0 + h * i * t;
+                    //yInter[0] = h0 + h * j * t;
+                    //zInter[0] = func(h0 + h * i * t, h0 + h * j * t);
 
                     //Zoom_XY(h0 + h * i * t, h + h * j * t, func(h0 + h * i * t, h + h * j * t),
                     //        out xx[1], out yy[1]);
@@ -183,7 +157,7 @@ namespace ForPractice
                     //yInter[3] = h0 + h * j * t;
                     //zInter[3] = func(h + h * i * t, h0 + h * j * t);
 
-                    coordinatesGraphicLists.Add((h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t)));
+                    //coordinatesGraphicLists.Add((h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t)));
 
                     //gr.DrawLine(p, xx[0], yy[0], xx[1], yy[1]);
                     //gr.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
@@ -215,6 +189,48 @@ namespace ForPractice
             #endregion
         }
 
+        private void DrawAxis(Pen p, Font font, SolidBrush b)
+        {
+            // рисование осей
+            // ось X
+            Zoom_XY(-0.3, 0, 0, out xx1, out yy1);
+            Zoom_XY(2.5, 0, 0, out xx2, out yy2);
+
+            gr.DrawLine(p, xx1, yy1, xx2, yy2);
+            gr.DrawString("X", font, b, xx2 + 3, yy2);
+
+            // ось Y
+            Zoom_XY(0, -0.3, 0, out xx1, out yy1);
+            Zoom_XY(0, 2.5, 0, out xx2, out yy2);
+            gr.DrawLine(p, xx1, yy1, xx2, yy2);
+            gr.DrawString("Y", font, b, xx2 + 3, yy2);
+
+            // ось Z
+            Zoom_XY(0, 0, -0.3, out xx1, out yy1);
+            Zoom_XY(0, 0, 2.5, out xx2, out yy2);
+            gr.DrawLine(p, xx1, yy1, xx2, yy2);
+            gr.DrawString("Z", font, b, xx2 + 3, yy2 - 3);
+
+            b.Color = Color.Red;
+
+            for (int z = 0; z <= 2; z++)
+            {
+                int t_X, t_Y;
+
+                Zoom_XY(z, 0, 0, out t_X, out t_Y);
+                gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
+                gr.DrawString(z.ToString(), font, b, t_X + 3, t_Y);
+
+                Zoom_XY(0, z, 0, out t_X, out t_Y);
+                gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
+                gr.DrawString(z.ToString(), font, b, t_X + 3, t_Y);
+
+                Zoom_XY(0, 0, z, out t_X, out t_Y);
+                gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
+                gr.DrawString(z.ToString(), font, b, t_X + 3, t_Y);
+            }
+        }
+
         private double[,] Func(double[] x, double[] y)
         {
             double[,] z = new double[x.Length, y.Length];
@@ -222,7 +238,7 @@ namespace ForPractice
             {
                 for (int j = 0; j < x.Length; j++)
                 {
-                    z[i, j] = func(x[i],y[i]);
+                    z[i, j] = func(x[j],y[i]);
                     //Console.Write(z[i, j] + " ");
                 }
                 //Console.WriteLine();
@@ -230,12 +246,52 @@ namespace ForPractice
             return z;
         }
 
-        public void InterpolateGraphic()
+        public void InterpolateGraphic(List<(double, double, double)> xyz,double h = 4.0, int nx = 3, int ny = 3, double n = 5.0)
         {
-            var t = coordinatesGraphicLists;
-            var zInter_ = Func(xInter, yInter);
-            var temp = Lagrange.InterpolateLagrange3D(0.1, 0.1, xInter, yInter, zInter_, xInter.Length);
+            clearSheet();
+            coordinatesGraphicLists = xyz;
+            double[] arrx; double[] arry; double[] arrz;
+            ToArr(out arrx, out arry,out arrz);
+            var zInter_ = Func(arrx, arry);
+            InterpolateResults = new double[(nx+1) * (ny + 1)];
+            double t = 15.0 / nx;
+            //int count = 0;
+            h = 1 / h;
+            this.n = n;
+            X_min = -n; Y_min = -n + 3; X_max = n; Y_max = n;
+            const double h0 = -0.3;
+            #region Шрифт
+            //Rectangle r1 = new Rectangle(left, top, left + width, top + height);
+            Pen p = new Pen(Color.Black);
+            //e.Graphics.DrawRectangle(p, r1);
 
+            // Создать шрифт
+            Font font = new Font("Courier New", 12, FontStyle.Bold);
+            SolidBrush b = new SolidBrush(Color.Blue);
+
+            #endregion
+            DrawAxis(p, font, b); //Рисование Осей
+            p.Color = Color.Black;
+            p.Width = 1;
+
+
+            //Zoom_XY(h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
+            //               out xx[0], out yy[0]);
+
+
+            for (int j = 0; j <= nx; j++)
+            {
+                for (int i = 0; i <= ny; i++)
+                {
+                    //InterpolateResults[count] = Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * j * t, arrx, arry, zInter_, arrx.Length);
+
+                    Zoom_XY(h0 + h * i * t, h0 + h * j * t, Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * j * t, arrx, arry, zInter_, arrx.Length),
+                            out xx[0], out yy[0]);
+                    gr.FillEllipse(Brushes.Black, xx[0], yy[0], 3, 3);
+                    //count++;
+                }
+            }
+            Console.WriteLine();
         }
         private void ToArr(out double[] arrx, out double[] arry, out double[] arrz)
         {
@@ -248,7 +304,8 @@ namespace ForPractice
             {
                 arrx[count] = item.Item1;
                 arry[count] = item.Item2;
-                arrx[count] = item.Item3;
+                arrz[count] = item.Item3;
+                count++;
             }
         }
 

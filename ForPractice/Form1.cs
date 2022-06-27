@@ -13,19 +13,25 @@ namespace ForPractice
     public partial class Form1 : Form
     {
         public DrawG G;
-        static int count = 0;
+        public DrawG G1;
+        static int count = 6;
         static double h=7;
         static int nx = 5;
         static int ny = 5;
         static double n = 5;
 
+        public List<(double, double, double)> coordinates;
+
         public Form1()
         {
             InitializeComponent();
             G = new DrawG(pictureBox1.Width, pictureBox1.Height);
-            G.drawGraphic(count+3, h, nx, ny,n);
+            G.drawGraphic(count, h, nx, ny,n);
             pictureBox1.Image = G.GetBitmap();
-            G.InterpolateGraphic();
+            G1 = new DrawG(pictureBox2.Width, pictureBox2.Height);
+            G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
+            pictureBox2.Image = G1.GetBitmap();
+
             //G=new DrawG(pictureBox2.Width, pictureBox2.Height);
             //G.drawGraphic(count, h, nx, ny, n);
             //pictureBox2.Image = G.GetBitmap();
@@ -33,33 +39,47 @@ namespace ForPractice
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
         {
+            coordinates = G.GetCoordinates();
             if (e.KeyData == Keys.Down)
             {
                 G.beta = G.beta - 0.1;
                 G.InvalidGraphic(count, h,nx,ny, n);
-                pictureBox1.Image = G.GetBitmap();
-                pictureBox2.Image = G.GetBitmap();
+                //pictureBox1.Image = G.GetBitmap();
+
+                G1.beta = G1.beta - 0.1;
+                G1.InterpolateGraphic(coordinates, h, nx, ny, n);
+                pictureBox2.Image = G1.GetBitmap();
+
             }
             if (e.KeyData == Keys.Up)
             {
                 G.beta = G.beta + 0.1;
                 G.InvalidGraphic(count, h, nx, ny, n);
-                pictureBox2.Image = G.GetBitmap();
-                pictureBox1.Image = G.GetBitmap();
+                //pictureBox1.Image = G.GetBitmap();
+
+                G1.beta = G1.beta + 0.1;
+                G1.InterpolateGraphic(coordinates, h, nx, ny, n);
+                pictureBox2.Image = G1.GetBitmap();
             }
             if (e.KeyData == Keys.Right)
             {
                 G.alfa = G.alfa + 0.1;
                 G.InvalidGraphic(count, h, nx, ny, n);
-                pictureBox2.Image = G.GetBitmap();
-                pictureBox1.Image = G.GetBitmap();
+                //pictureBox1.Image = G.GetBitmap();
+
+                G1.alfa = G1.alfa + 0.1;
+                G1.InterpolateGraphic(coordinates, h, nx, ny, n);
+                pictureBox2.Image = G1.GetBitmap();
             }
             if (e.KeyData == Keys.Left)
             {
                 G.alfa = G.alfa - 0.1;
                 G.InvalidGraphic(count, h, nx, ny, n);
-                pictureBox2.Image = G.GetBitmap();
-                pictureBox1.Image = G.GetBitmap();
+                //pictureBox1.Image = G.GetBitmap();
+
+                G1.alfa = G1.alfa - 0.1;
+                G1.InterpolateGraphic(coordinates, h, nx, ny, n);
+                pictureBox2.Image = G1.GetBitmap();
             }
             if (e.KeyData == Keys.Escape)
             {
@@ -99,8 +119,11 @@ namespace ForPractice
                 count++;
                 count %= 8;
                 G.InvalidGraphic(count,h, nx, ny, n);
-                pictureBox2.Image = G.GetBitmap();
-                pictureBox1.Image = G.GetBitmap();
+                //pictureBox1.Image = G.GetBitmap();
+
+                coordinates = G.GetCoordinates();
+                G1.InterpolateGraphic(coordinates,h, nx, ny, n);
+                pictureBox2.Image = G1.GetBitmap();
             }
             if(e.KeyData == Keys.Enter)
             {
@@ -114,19 +137,27 @@ namespace ForPractice
             h=((double)numericUpDown1.Value);
             G.InvalidGraphic(count, h, nx, ny, n);
             pictureBox1.Image = G.GetBitmap();
+            G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
+            pictureBox2.Image=G1.GetBitmap();
         }
         private void numericUpDown2_ValueChanged(object sender, EventArgs e)
         {
             nx = (int)numericUpDown2.Value;
             ny = (int)numericUpDown2.Value;
-            G.InvalidGraphic(count, h, nx, ny, n);
-            pictureBox1.Image = G.GetBitmap();
+            //G.InvalidGraphic(count, h, nx, ny, n);
+            //pictureBox1.Image = G.GetBitmap();
+
+            G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
+            pictureBox2.Image = G1.GetBitmap();
         }
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
             n = (double)numericUpDown3.Value;
-            G.InvalidGraphic(count, h, nx, ny, n);
-            pictureBox1.Image = G.GetBitmap();
+            //G.InvalidGraphic(count, h, nx, ny, n);
+            //pictureBox1.Image = G.GetBitmap();
+
+            G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
+            pictureBox2.Image = G1.GetBitmap();
 
         }
         private void panel1_MouseClick(object sender, MouseEventArgs e)
