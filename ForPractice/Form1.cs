@@ -6,7 +6,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WpfMath;
 using System.Windows.Forms;
+using System.IO;
 
 namespace ForPractice
 {
@@ -14,11 +16,14 @@ namespace ForPractice
     {
         public DrawG G;
         public DrawG G1;
-        static int count = 6;
+        static int count = 0;
         static double h=7;
         static int nx = 5;
         static int ny = 5;
         static double n = 5;
+        string[] functions = { "f(x,y)=1", "f(x,y)=x", "f(x,y)=y",
+            "f(x,y)=x+y", @"f(x,y)=\sqrt{x^2+y^2}", "f(x,y)=x^2+y^2", 
+            "f(x,y)=e^{x^2-y^2}", @"f(x,y)=\frac{1}{25\cdot(x^2+y^2)+1}" };
 
         public List<(double, double, double)> coordinates;
 
@@ -26,12 +31,12 @@ namespace ForPractice
         {
             InitializeComponent();
             G = new DrawG(pictureBox1.Width, pictureBox1.Height);
-            G.drawGraphic(count, h, nx, ny,n);
+            G.drawGraphic(count, h, 10, 10,n);
             pictureBox1.Image = G.GetBitmap();
             G1 = new DrawG(pictureBox2.Width, pictureBox2.Height);
             G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
             pictureBox2.Image = G1.GetBitmap();
-
+            SetPicture(functions[count]);
             //G=new DrawG(pictureBox2.Width, pictureBox2.Height);
             //G.drawGraphic(count, h, nx, ny, n);
             //pictureBox2.Image = G.GetBitmap();
@@ -43,8 +48,8 @@ namespace ForPractice
             if (e.KeyData == Keys.Down)
             {
                 G.beta = G.beta - 0.1;
-                G.InvalidGraphic(count, h,nx,ny, n);
-                //pictureBox1.Image = G.GetBitmap();
+                G.InvalidGraphic(count, h,10,10, n);
+                pictureBox1.Image = G.GetBitmap();
 
                 G1.beta = G1.beta - 0.1;
                 G1.InterpolateGraphic(coordinates, h, nx, ny, n);
@@ -54,8 +59,8 @@ namespace ForPractice
             if (e.KeyData == Keys.Up)
             {
                 G.beta = G.beta + 0.1;
-                G.InvalidGraphic(count, h, nx, ny, n);
-                //pictureBox1.Image = G.GetBitmap();
+                G.InvalidGraphic(count, h, 10, 10, n);
+                pictureBox1.Image = G.GetBitmap();
 
                 G1.beta = G1.beta + 0.1;
                 G1.InterpolateGraphic(coordinates, h, nx, ny, n);
@@ -64,8 +69,8 @@ namespace ForPractice
             if (e.KeyData == Keys.Right)
             {
                 G.alfa = G.alfa + 0.1;
-                G.InvalidGraphic(count, h, nx, ny, n);
-                //pictureBox1.Image = G.GetBitmap();
+                G.InvalidGraphic(count, h, 10, 10, n);
+                pictureBox1.Image = G.GetBitmap();
 
                 G1.alfa = G1.alfa + 0.1;
                 G1.InterpolateGraphic(coordinates, h, nx, ny, n);
@@ -74,8 +79,8 @@ namespace ForPractice
             if (e.KeyData == Keys.Left)
             {
                 G.alfa = G.alfa - 0.1;
-                G.InvalidGraphic(count, h, nx, ny, n);
-                //pictureBox1.Image = G.GetBitmap();
+                G.InvalidGraphic(count, h, 10, 10, n);
+                pictureBox1.Image = G.GetBitmap();
 
                 G1.alfa = G1.alfa - 0.1;
                 G1.InterpolateGraphic(coordinates, h, nx, ny, n);
@@ -118,25 +123,51 @@ namespace ForPractice
             {
                 count++;
                 count %= 8;
-                G.InvalidGraphic(count,h, nx, ny, n);
-                //pictureBox1.Image = G.GetBitmap();
+                G.InvalidGraphic(count,h, 10, 10, n);
+                pictureBox1.Image = G.GetBitmap();
 
                 coordinates = G.GetCoordinates();
                 G1.InterpolateGraphic(coordinates,h, nx, ny, n);
                 pictureBox2.Image = G1.GetBitmap();
+                SetPicture(functions[count]);
+
             }
-            if(e.KeyData == Keys.Enter)
+            if (e.KeyData == Keys.Enter)
             {
                 numericUpDown1.Enabled = false;
 
             }
         }
+        void PrintLatex(string latex)
+        {
+            
+        }
+        void SetPicture(string latex)
+        {
+            var parser = new TexFormulaParser();
+            var formula = parser.Parse(latex);
 
+            var pngBytes = formula.RenderToPng(20.0, 1.0, 0.0, "Arial");
+            Bitmap bmp;
+            using (var ms = new MemoryStream(pngBytes))
+            {
+                bmp = new Bitmap(ms);
+            }
+            pictureBox3.Image = bmp;
+            //using (Graphics g=Graphics.FromImage(bmp))
+            //{
+            //    using (Image im=bmp)
+            //    {
+
+            //    }
+            //}
+        }
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             h=((double)numericUpDown1.Value);
-            G.InvalidGraphic(count, h, nx, ny, n);
+            G.InvalidGraphic(count, h, 10,10, n);
             pictureBox1.Image = G.GetBitmap();
+
             G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
             pictureBox2.Image=G1.GetBitmap();
         }
@@ -144,20 +175,21 @@ namespace ForPractice
         {
             nx = (int)numericUpDown2.Value;
             ny = (int)numericUpDown2.Value;
-            //G.InvalidGraphic(count, h, nx, ny, n);
-            //pictureBox1.Image = G.GetBitmap();
+            G.InvalidGraphic(count, h, 10, 10, n);
+            pictureBox1.Image = G.GetBitmap();
 
             G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
             pictureBox2.Image = G1.GetBitmap();
         }
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
-            n = (double)numericUpDown3.Value;
-            //G.InvalidGraphic(count, h, nx, ny, n);
-            //pictureBox1.Image = G.GetBitmap();
+            n = 0.05*(double)numericUpDown3.Value;
+            G.InvalidGraphic(count, h, 10,10, n);
+            pictureBox1.Image = G.GetBitmap();
 
             G1.InterpolateGraphic(G.GetCoordinates(), h, nx, ny, n);
             pictureBox2.Image = G1.GetBitmap();
+
 
         }
         private void panel1_MouseClick(object sender, MouseEventArgs e)
@@ -174,6 +206,9 @@ namespace ForPractice
             numericUpDown3.Enabled = false;
         }
 
+        private void label1_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }
