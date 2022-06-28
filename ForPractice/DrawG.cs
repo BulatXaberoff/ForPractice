@@ -95,11 +95,11 @@ namespace ForPractice
             p.Color = Color.Black;
             p.Width = 1;
             double t = 10.0 / nx;
-            for (j = 0; j < ny; j++)
+            for (j = 0; j <= ny; j++)
             {
                 coordinatesGraphicLists.Add((h0 + h * j * t, h0 + h * j * t, func(h0 + h * j * t, h0 + h * j * t)));
             }
-
+            int x, y;
 
             for (j = 0; j <= nx; j++)
             {
@@ -133,7 +133,7 @@ namespace ForPractice
                     //zInter[3]= func(h + h * i, h0 + h * j);
                     #endregion
                     Zoom_XY(h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
-                            out xx[0], out yy[0]);
+                            out x, out y);
                     //coordinatesGraphicLists.Add((h0 + h * i * t, h0 + h * i * t, func(h0 + h * i * t, h0 + h * i * t)));
                     //xInter[0] = h0 + h * i * t;
                     //yInter[0] = h0 + h * j * t;
@@ -163,7 +163,7 @@ namespace ForPractice
                     //gr.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
                     //gr.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
                     //gr.DrawLine(p, xx[3], yy[3], xx[0], yy[0]);
-                    gr.FillEllipse(Brushes.Black, xx[0], yy[0], 3, 3);
+                    gr.FillEllipse(Brushes.Black, x, y, 3, 3);
                     //gr.FillEllipse(Brushes.Black, xx[1], yy[1], 3, 3);
                     //gr.FillEllipse(Brushes.Black, xx[2], yy[2], 3, 3);
                     //gr.FillEllipse(Brushes.Black, xx[3], yy[3], 3, 3);
@@ -187,7 +187,15 @@ namespace ForPractice
             //        e.Graphics.DrawLine(p, xx[3], yy[3], xx[0], yy[0]);
             //    }
             #endregion
+            double []arrz=new double [coordinatesGraphicLists.Count];
+            for (i = 0; i < arrz.Length; i++)
+            {
+                arrz[i] = coordinatesGraphicLists[i].Item3;
+            }
+            FuncMax(arrz);
+            FuncMin(arrz);
         }
+
 
         private void DrawAxis(Pen p, Font font, SolidBrush b)
         {
@@ -254,7 +262,7 @@ namespace ForPractice
             ToArr(out arrx, out arry,out arrz);
             var zInter_ = Func(arrx, arry);
             InterpolateResults = new double[(nx+1) * (ny + 1)];
-            double t = 15.0 / nx;
+            double t = 11.0 / nx;
             //int count = 0;
             h = 1 / h;
             this.n = n;
@@ -277,21 +285,53 @@ namespace ForPractice
 
             //Zoom_XY(h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
             //               out xx[0], out yy[0]);
-
-
+            int x, y;
+            arrz = new double[ny+1];
             for (int j = 0; j <= nx; j++)
             {
                 for (int i = 0; i <= ny; i++)
                 {
                     //InterpolateResults[count] = Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * j * t, arrx, arry, zInter_, arrx.Length);
-
+                    if (j==0)
+                    {
+                        arrz[i] = Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * i * t, arrx, arry, zInter_, arrx.Length);
+                    }
                     Zoom_XY(h0 + h * i * t, h0 + h * j * t, Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * j * t, arrx, arry, zInter_, arrx.Length),
-                            out xx[0], out yy[0]);
-                    gr.FillEllipse(Brushes.Black, xx[0], yy[0], 3, 3);
+                            out x, out y);
+                    gr.FillEllipse(Brushes.Black, x, y, 3, 3);
                     //count++;
                 }
             }
-            Console.WriteLine();
+            FuncMax(arrz);
+            FuncMin(arrz);
+        }
+
+
+        void FuncMax(double []arr)
+        {
+            var max = arr[0];
+            for (int i = 1; i < arr.Length; i++)
+            {
+                if(arr[i]>max)
+                {
+                    max= arr[i];
+                }
+            }
+            var st = $"|Fmax|={max}";
+            gr.DrawString(st,new Font(FontFamily.GenericSansSerif,12),new SolidBrush(Color.Black),0,0);
+        }
+        void FuncMin(double[] arr)
+        {
+            var min = arr[0];
+            for (int i = 1; i < arr.Length; i++)
+            {
+                if (arr[i] < min)
+                {
+                    min = arr[i];
+                }
+            }
+            var st = $"|Fmin|={min}";
+            gr.DrawString(st, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black), 0, 16);
         }
         private void ToArr(out double[] arrx, out double[] arry, out double[] arrz)
         {

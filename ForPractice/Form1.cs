@@ -144,9 +144,11 @@ namespace ForPractice
         }
         void SetPicture(string latex)
         {
+          
+            string l = @"\color{purple}{" + latex+"}";
+            latex = l;
             var parser = new TexFormulaParser();
             var formula = parser.Parse(latex);
-
             var pngBytes = formula.RenderToPng(20.0, 1.0, 0.0, "Arial");
             Bitmap bmp;
             using (var ms = new MemoryStream(pngBytes))
@@ -207,6 +209,11 @@ namespace ForPractice
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
         }
