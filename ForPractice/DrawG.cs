@@ -79,15 +79,11 @@ namespace ForPractice
 
             const double h0 = -0.3;
             int i, j;
+
             #region Шрифт
-            //Rectangle r1 = new Rectangle(left, top, left + width, top + height);
             Pen p = new Pen(Color.Black);
-            //e.Graphics.DrawRectangle(p, r1);
-
-            // Создать шрифт
-            Font font = new Font("Courier New", 12, FontStyle.Bold);
+            Font font = new Font("Courier New", 12, FontStyle.Bold); // Создать шрифт
             SolidBrush b = new SolidBrush(Color.Blue);
-
             #endregion
             DrawAxis(p, font, b); //Рисование Осей
 
@@ -134,59 +130,10 @@ namespace ForPractice
                     #endregion
                     Zoom_XY(h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
                             out x, out y);
-                    //coordinatesGraphicLists.Add((h0 + h * i * t, h0 + h * i * t, func(h0 + h * i * t, h0 + h * i * t)));
-                    //xInter[0] = h0 + h * i * t;
-                    //yInter[0] = h0 + h * j * t;
-                    //zInter[0] = func(h0 + h * i * t, h0 + h * j * t);
-
-                    //Zoom_XY(h0 + h * i * t, h + h * j * t, func(h0 + h * i * t, h + h * j * t),
-                    //        out xx[1], out yy[1]);
-                    //xInter[1] = h0 + h * i * t;
-                    //yInter[1] = h + h * j * t;
-                    //zInter[1] = func(h0 + h * i * t, h + h * j * t);
-
-                    //Zoom_XY(h + h * i * t, h + h * j * t, func(h + h * i * t, h + h * j * t),
-                    //        out xx[2], out yy[2]);
-                    //xInter[2] = h + h * i * t;
-                    //yInter[2] = h + h * j * t;
-                    //yInter[2] = func(h + h * i * t, h + h * j * t);
-
-                    //Zoom_XY(h + h * i * t, h0 + h * j * t, func(h + h * i * t, h0 + h * j * t),
-                    //        out xx[3], out yy[3]);
-                    //xInter[3] = h + h * i * t;
-                    //yInter[3] = h0 + h * j * t;
-                    //zInter[3] = func(h + h * i * t, h0 + h * j * t);
-
-                    //coordinatesGraphicLists.Add((h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t)));
-
-                    //gr.DrawLine(p, xx[0], yy[0], xx[1], yy[1]);
-                    //gr.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
-                    //gr.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
-                    //gr.DrawLine(p, xx[3], yy[3], xx[0], yy[0]);
+                    
                     gr.FillEllipse(Brushes.Black, x, y, 3, 3);
-                    //gr.FillEllipse(Brushes.Black, xx[1], yy[1], 3, 3);
-                    //gr.FillEllipse(Brushes.Black, xx[2], yy[2], 3, 3);
-                    //gr.FillEllipse(Brushes.Black, xx[3], yy[3], 3, 3);
                 }
             }
-            #region
-            //for (j = 0; j <= 11; j++)
-            //    for (i = 0; i <= 9; i++)
-            //    {
-            //        Zoom_XY(h0 + h * i, func(h0 + h * i, h0 + h * j), 0,
-            //                out xx[0], out yy[0]);
-            //        Zoom_XY(h0 + h * i, func(h0 + h * i, h0 + h * j), 0,
-            //                out xx[1], out yy[1]);
-            //        Zoom_XY(h0 + h * i, func(h0 + h * i, h0 + h * j), 0,
-            //                out xx[2], out yy[2]);
-            //        Zoom_XY(h0 + h * i, func(h0 + h * i, h0 + h * j), 0,
-            //                out xx[3], out yy[3]);
-            //        e.Graphics.DrawLine(p, xx[0], yy[0], xx[1], yy[1]);
-            //        e.Graphics.DrawLine(p, xx[1], yy[1], xx[2], yy[2]);
-            //        e.Graphics.DrawLine(p, xx[2], yy[2], xx[3], yy[3]);
-            //        e.Graphics.DrawLine(p, xx[3], yy[3], xx[0], yy[0]);
-            //    }
-            #endregion
             double []arrz=new double [coordinatesGraphicLists.Count];
             for (i = 0; i < arrz.Length; i++)
             {

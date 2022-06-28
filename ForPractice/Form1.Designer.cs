@@ -198,7 +198,6 @@
             this.label1.Size = new System.Drawing.Size(138, 20);
             this.label1.TabIndex = 4;
             this.label1.Text = "График функции";
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -235,7 +234,6 @@
             this.справкаToolStripMenuItem.Name = "справкаToolStripMenuItem";
             this.справкаToolStripMenuItem.Size = new System.Drawing.Size(65, 20);
             this.справкаToolStripMenuItem.Text = "Справка";
-            this.справкаToolStripMenuItem.Click += new System.EventHandler(this.справкаToolStripMenuItem_Click);
             // 
             // Form1
             // 

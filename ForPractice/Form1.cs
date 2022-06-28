@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WpfMath;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace ForPractice
 {
@@ -207,15 +208,6 @@ namespace ForPractice
             numericUpDown2.Enabled = false;
             numericUpDown3.Enabled = false;
         }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
+       
     }
 }
