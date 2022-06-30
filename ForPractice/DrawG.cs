@@ -91,18 +91,17 @@ namespace ForPractice
             p.Color = Color.Black;
             p.Width = 1;
             double t = 10.0 / nx;
-            for (j = 0; j <= ny; j++)
+            for (j = 0; j < ny; j++)
             {
                 coordinatesGraphicLists.Add((h0 + h * j * t, h0 + h * j * t, func(h0 + h * j * t, h0 + h * j * t)));
             }
             int x, y;
+            double[,] arrz = new double[nx,ny];
 
-            for (j = 0; j <= nx; j++)
+            for (j = 0; j < nx; j++)
             {
-                for (i = 0; i <= ny; i++)
+                for (i = 0; i < ny; i++)
                 {
-                    //var x = h0 + h * i;
-                    //var y = h0 + h * j;
                     #region начальный метод построения по i,j
                     //Zoom_XY(h0 + h * i, h0 + h * j, func(h0 + h * i, h0 + h * j),
                     //        out xx[0], out yy[0]);
@@ -130,19 +129,21 @@ namespace ForPractice
                     #endregion
                     Zoom_XY(h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
                             out x, out y);
-                    
+                    arrz[j, i] = func(h0 + h * i * t, h0 + h * j * t);
                     gr.FillEllipse(Brushes.Black, x, y, 3, 3);
                 }
             }
-            double []arrz=new double [coordinatesGraphicLists.Count];
-            for (i = 0; i < arrz.Length; i++)
-            {
-                arrz[i] = coordinatesGraphicLists[i].Item3;
-            }
-            FuncMax(arrz);
-            FuncMin(arrz);
+            AmountPointers(nx*ny);
+            ValueFuncMax(arrz);
+            ValueFuncMin(arrz);
+            
         }
 
+        private void AmountPointers(int amt)
+        {
+            string st = $"Кол-во точек {amt}";
+            gr.DrawString(st, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black), 0, 32);
+        }
 
         private void DrawAxis(Pen p, Font font, SolidBrush b)
         {
@@ -205,9 +206,9 @@ namespace ForPractice
         {
             clearSheet();
             coordinatesGraphicLists = xyz;
-            double[] arrx; double[] arry; double[] arrz;
-            ToArr(out arrx, out arry,out arrz);
-            var zInter_ = Func(arrx, arry);
+            double[] arrx; double[] arry;
+            ToArr(out arrx, out arry);
+            var arrz = Func(arrx, arry);
             InterpolateResults = new double[(nx+1) * (ny + 1)];
             double t = 11.0 / nx;
             //int count = 0;
@@ -216,9 +217,7 @@ namespace ForPractice
             X_min = -n; Y_min = -n + 3; X_max = n; Y_max = n;
             const double h0 = -0.3;
             #region Шрифт
-            //Rectangle r1 = new Rectangle(left, top, left + width, top + height);
             Pen p = new Pen(Color.Black);
-            //e.Graphics.DrawRectangle(p, r1);
 
             // Создать шрифт
             Font font = new Font("Courier New", 12, FontStyle.Bold);
@@ -228,70 +227,71 @@ namespace ForPractice
             DrawAxis(p, font, b); //Рисование Осей
             p.Color = Color.Black;
             p.Width = 1;
-
+            double[,] zInter = new double[nx, ny];
 
             //Zoom_XY(h0 + h * i * t, h0 + h * j * t, func(h0 + h * i * t, h0 + h * j * t),
             //               out xx[0], out yy[0]);
             int x, y;
-            arrz = new double[ny+1];
-            for (int j = 0; j <= nx; j++)
+            for (int j = 0; j < nx; j++)
             {
-                for (int i = 0; i <= ny; i++)
+                for (int i = 0; i < ny; i++)
                 {
-                    //InterpolateResults[count] = Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * j * t, arrx, arry, zInter_, arrx.Length);
-                    if (j==0)
-                    {
-                        arrz[i] = Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * i * t, arrx, arry, zInter_, arrx.Length);
-                    }
-                    Zoom_XY(h0 + h * i * t, h0 + h * j * t, Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * j * t, arrx, arry, zInter_, arrx.Length),
+                    var temp= Lagrange.InterpolateLagrange3D(h0 + h * i * t, h0 + h * j * t, arrx, arry, arrz, arrx.Length);
+                    zInter[j, i] = temp;
+                    Zoom_XY(h0 + h * i * t, h0 + h * j * t, temp,
                             out x, out y);
                     gr.FillEllipse(Brushes.Black, x, y, 3, 3);
                     //count++;
                 }
             }
-            FuncMax(arrz);
-            FuncMin(arrz);
+            AmountPointers(nx * ny);
+            ValueFuncMax(zInter);
+            ValueFuncMin(zInter);
         }
 
 
-        void FuncMax(double []arr)
+        void ValueFuncMax(double [,]arr)
         {
-            var max = arr[0];
-            for (int i = 1; i < arr.Length; i++)
+            var max = -1.0;
+            for (int i = 0; i < arr.GetLength(0); i++)
             {
-                if(arr[i]>max)
+                for (int j = 0; j < arr.GetLength(1); j++)
                 {
-                    max= arr[i];
+                    if (max<arr[i,j])
+                    {
+                        max = arr[i, j];
+                    }
                 }
             }
             var st = $"|Fmax|={max}";
             gr.DrawString(st,new Font(FontFamily.GenericSansSerif,12),new SolidBrush(Color.Black),0,0);
         }
-        void FuncMin(double[] arr)
+        void ValueFuncMin(double[,] arr)
         {
-            var min = arr[0];
-            for (int i = 1; i < arr.Length; i++)
+            var min = arr[0,0];
+            for (int i = 0; i < arr.GetLength(0); i++)
             {
-                if (arr[i] < min)
+                for (int j = 0; j < arr.GetLength(1); j++)
                 {
-                    min = arr[i];
+                    if (min > arr[i, j])
+                    {
+                        min = arr[i, j];
+                    }
                 }
             }
             var st = $"|Fmin|={min}";
             gr.DrawString(st, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black), 0, 16);
         }
-        private void ToArr(out double[] arrx, out double[] arry, out double[] arrz)
+        private void ToArr(out double[] arrx, out double[] arry)
         {
             int size=coordinatesGraphicLists.Count;
             arrx = new double[size];
             arry = new double[size];
-            arrz = new double[size];
             int count = 0;
             foreach (var item in coordinatesGraphicLists)
             {
                 arrx[count] = item.Item1;
                 arry[count] = item.Item2;
-                arrz[count] = item.Item3;
                 count++;
             }
         }

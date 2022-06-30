@@ -74,7 +74,7 @@
             // numericUpDown1
             // 
             this.numericUpDown1.Enabled = false;
-            this.numericUpDown1.Location = new System.Drawing.Point(143, 12);
+            this.numericUpDown1.Location = new System.Drawing.Point(171, 12);
             this.numericUpDown1.Maximum = new decimal(new int[] {
             9,
             0,
@@ -126,9 +126,9 @@
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label4.Location = new System.Drawing.Point(3, 38);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(134, 20);
+            this.label4.Size = new System.Drawing.Size(151, 20);
             this.label4.TabIndex = 8;
-            this.label4.Text = "Кол-во 4-х точек";
+            this.label4.Text = "Кол-во nx*ny точек";
             // 
             // label3
             // 
@@ -149,7 +149,7 @@
             0,
             0,
             65536});
-            this.numericUpDown3.Location = new System.Drawing.Point(143, 64);
+            this.numericUpDown3.Location = new System.Drawing.Point(171, 64);
             this.numericUpDown3.Maximum = new decimal(new int[] {
             200,
             0,
@@ -173,7 +173,7 @@
             // numericUpDown2
             // 
             this.numericUpDown2.Enabled = false;
-            this.numericUpDown2.Location = new System.Drawing.Point(143, 38);
+            this.numericUpDown2.Location = new System.Drawing.Point(171, 38);
             this.numericUpDown2.Minimum = new decimal(new int[] {
             1,
             0,
@@ -225,7 +225,7 @@
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.menuStrip1.Size = new System.Drawing.Size(1167, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1186, 24);
             this.menuStrip1.TabIndex = 7;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -240,7 +240,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(1167, 666);
+            this.ClientSize = new System.Drawing.Size(1186, 666);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);

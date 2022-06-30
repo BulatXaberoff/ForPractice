@@ -17,10 +17,10 @@ namespace ForPractice
     {
         public DrawG G;
         public DrawG G1;
-        static int count = 0;
+        static int count = 7;
         static double h=7;
-        static int nx = 5;
-        static int ny = 5;
+        static int nx = 3;
+        static int ny = 3;
         static double n = 5;
         string[] functions = { "f(x,y)=1", "f(x,y)=x", "f(x,y)=y",
             "f(x,y)=x+y", @"f(x,y)=\sqrt{x^2+y^2}", "f(x,y)=x^2+y^2", 
