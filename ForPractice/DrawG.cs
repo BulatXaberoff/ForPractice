@@ -8,21 +8,20 @@ namespace ForPractice
     {
         static int CountFunction = 0;
 
-        private int xx1, xx2, yy1, yy2;
-        private int x, y;
+        private int xx1, xx2, yy1, yy2; //вспомогательные переменные для построения осей координат
+                                        //в прострастве(используются как out в функции Zoom_XY()) 
+        private int x, y; //пара точек предназначенные для вывода функции
 
-
-        public int left;
-        public int top;
         public int width;
         public int height;
+
         double n = 5;
-        public double X_min, Y_min, X_max, Y_max;
-        public double x0=0, y0=0, z0=0;
-        public double A=-8;
-        public bool f_show=false;
-        public double alfa=10, beta=12;
-        public List<(double, double,double)> coordinatesGraphicLists;
+        public double X_min, Y_min, X_max, Y_max; //величины которые представляют координаты параллепипеда,
+                                                  //в котором выводит график функции
+        public double A=-8; //коэффициент перспективы
+        public double alfa=10, beta=12;//углы наблюдения графика
+        public List<(double, double,double)> coordinatesGraphicLists; //содержит в себе хранимые
+                                                                      //координаты точек для последующего интерполирования
         Bitmap bitmap;
         Graphics gr;
 
@@ -66,12 +65,12 @@ namespace ForPractice
 
             const double h0 = -0.3;
 
-            #region Шрифт
+            #region Рисование осей
             Pen p = new Pen(Color.Black);
             Font font = new Font("Courier New", 12, FontStyle.Bold); // Создать шрифт
             SolidBrush b = new SolidBrush(Color.Blue);
-            #endregion
             DrawAxis(p, font, b); //Рисование Осей
+            #endregion
 
             // рисование поверхности
             p.Color = Color.Black;
@@ -151,14 +150,22 @@ namespace ForPractice
         private void Zoom_XY(double x, double y, double z, out int xx, out int yy)
         {
             double xn, yn;
-            double tx, ty, tz;
-            tx = (x - x0) * Math.Cos(alfa) - (y - y0) * Math.Sin(alfa);
-            ty = ((x - x0) * Math.Sin(alfa) + (y - y0) * Math.Cos(alfa)) * Math.Cos(beta) -
-                 (z - z0) * Math.Sin(beta);
-            tz = ((x - x0) * Math.Sin(alfa) + (y - y0) * Math.Cos(alfa)) * Math.Sin(beta) +
-                 (z - z0) * Math.Cos(beta);
-            xn = tx / (tz / A + 1);
-            yn = ty / (ty / A + 1);
+            double rx, ry, rz;
+            //Формула преобразования системы координат в 3-х мерном пространстве относительно точки(x0;y0;z0;)
+            //и углов (alfa,beta)
+            //rx = (x - x0) * Math.Cos(alfa) - (y - y0) * Math.Sin(alfa);
+            //ry = ((x - x0) * Math.Sin(alfa) + (y - y0) * Math.Cos(alfa)) * Math.Cos(beta) -
+            //     (z - z0) * Math.Sin(beta);
+            //rz = ((x - x0) * Math.Sin(alfa) + (y - y0) * Math.Cos(alfa)) * Math.Sin(beta) +
+            //     (z - z0) * Math.Cos(beta);
+            rx = x  * Math.Cos(alfa) - y * Math.Sin(alfa);
+            ry = (x * Math.Sin(alfa) + y * Math.Cos(alfa)) * Math.Cos(beta) -
+                 (z  * Math.Sin(beta));
+            rz = (x * Math.Sin(alfa) + y * Math.Cos(alfa)) * Math.Sin(beta) +
+                 z * Math.Cos(beta);
+            //Одноточечное проецирование на плоскость Z=0
+            xn = rx / (rz / A + 1);
+            yn = ry / (ry / A + 1);
 
             xx = (int)(width * (xn - X_min) / (X_max - X_min));
             yy = (int)(height * (yn - Y_max) / (Y_min - Y_max));
@@ -259,7 +266,7 @@ namespace ForPractice
             }
             return z;
         }
-        void ValueFuncMax(double[,] arr)
+        private void ValueFuncMax(double[,] arr)
         {
             var max = -1.0;
             for (int i = 0; i < arr.GetLength(0); i++)
@@ -275,7 +282,7 @@ namespace ForPractice
             var st = $"|Fmax|={max}";
             gr.DrawString(st, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black), 0, 0);
         }
-        void ValueFuncMin(double[,] arr)
+        private void ValueFuncMin(double[,] arr)
         {
             var min = arr[0, 0];
             for (int i = 0; i < arr.GetLength(0); i++)
