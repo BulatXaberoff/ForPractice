@@ -93,6 +93,94 @@ namespace ForPractice
                 G2.InterpolateGraphic(coordinates, h, nx2, ny2, n);
                 pictureBox2.Image = G2.GetBitmap();
             }
+            if (e.KeyData == Keys.D2)
+            {
+                try
+                {
+                    n = 0.05 * (double)(++numericUpDown3.Value);
+                    G1.InvalidGraphic(countfunction, h, 10, 10, n);
+                    pictureBox1.Image = G1.GetBitmap();
+
+                    G2.InterpolateGraphic(G1.GetCoordinates(), h, nx2, ny2, n);
+                    pictureBox2.Image = G2.GetBitmap();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Максимальное значение масштаба 200");
+                }
+               
+
+            }
+            if (e.KeyData == Keys.D3)
+            {
+                try
+                {
+                    n = 0.05 * (double)(--numericUpDown3.Value);
+                    G1.InvalidGraphic(countfunction, h, 10, 10, n);
+                    pictureBox1.Image = G1.GetBitmap();
+
+                    G2.InterpolateGraphic(G1.GetCoordinates(), h, nx2, ny2, n);
+                    pictureBox2.Image = G2.GetBitmap();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Минимальное значение масштаба 50");
+                }
+                
+
+            }
+
+
+            if (e.KeyData == Keys.D4)
+            {
+                try
+                {
+                    numericUpDown2.Value = ++nx2;
+                    ny2 = nx2;
+                    G1.InvalidGraphic(countfunction, h, 10, 10, n);
+                    pictureBox1.Image = G1.GetBitmap();
+
+                    G2.InterpolateGraphic(G1.GetCoordinates(), h, nx2, ny2, n);
+                    pictureBox2.Image = G2.GetBitmap();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Максимальное кол-во точек 100");
+                }
+                
+            }
+            if (e.KeyData == Keys.D5)
+            {
+                try
+                {
+                    numericUpDown2.Value = --nx2;
+                    ny2 = nx2;
+                    G1.InvalidGraphic(countfunction, h, 10, 10, n);
+                    pictureBox1.Image = G1.GetBitmap();
+
+                    G2.InterpolateGraphic(G1.GetCoordinates(), h, nx2, ny2, n);
+                    pictureBox2.Image = G2.GetBitmap();
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Минимальное кол-во точек 1");
+                }
+                
+            }
+
+            if (e.KeyData == Keys.D0)
+            {
+                countfunction++;
+                countfunction %= 8;
+                G1.InvalidGraphic(countfunction, h, nx1, ny1, n);
+                pictureBox1.Image = G1.GetBitmap();
+
+                coordinates = G1.GetCoordinates();
+                G2.InterpolateGraphic(coordinates, h, nx2, ny2, n);
+                pictureBox2.Image = G2.GetBitmap();
+                SetPicture(functions[countfunction]);
+
+            }
             if (e.KeyData == Keys.Escape)
             {
                 Close();
@@ -126,24 +214,7 @@ namespace ForPractice
                     }
                 }
             }
-            if(e.KeyData == Keys.D0)
-            {
-                countfunction++;
-                countfunction %= 8;
-                G1.InvalidGraphic(countfunction,h, nx1, ny1, n);
-                pictureBox1.Image = G1.GetBitmap();
-
-                coordinates = G1.GetCoordinates();
-                G2.InterpolateGraphic(coordinates,h, nx2, ny2, n);
-                pictureBox2.Image = G2.GetBitmap();
-                SetPicture(functions[countfunction]);
-
-            }
-            if (e.KeyData == Keys.Enter)
-            {
-                numericUpDown1.Enabled = false;
-
-            }
+            
         }
         void SetPicture(string latex)
         {
@@ -195,6 +266,7 @@ namespace ForPractice
             numericUpDown1.Enabled = true;
             numericUpDown2.Enabled = true;
             numericUpDown3.Enabled = true;
+            reset_button.Enabled = true;
         }
 
         private void panel1_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -202,7 +274,32 @@ namespace ForPractice
             numericUpDown1.Enabled = false;
             numericUpDown2.Enabled = false;
             numericUpDown3.Enabled = false;
+            reset_button.Enabled = false;
         }
-       
+
+        private void reset_button_Click(object sender, EventArgs e)
+        {
+            countfunction = 7;
+            SetPicture(functions[countfunction]);
+
+            h = 7;
+            numericUpDown1.Value = (decimal)h;
+
+            nx2 = 3;
+            ny2 = 3;
+            numericUpDown2.Value = nx2;
+
+            numericUpDown3.Value = 100;
+            n = 0.05 * (double)numericUpDown3.Value;
+
+
+            G1 = new DrawG(pictureBox1.Width, pictureBox1.Height);
+            G1.drawGraphic(countfunction, h, nx1, ny1, n);
+            pictureBox1.Image = G1.GetBitmap();
+
+            G2 = new DrawG(pictureBox2.Width, pictureBox2.Height);
+            G2.InterpolateGraphic(G1.GetCoordinates(), h, nx2, ny2, n);
+            pictureBox2.Image = G2.GetBitmap();
+        }
     }
 }

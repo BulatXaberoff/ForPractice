@@ -90,7 +90,7 @@ namespace ForPractice
                     ytemp = h0 + h * j * t;
                     ztemp = Function(xtemp, ytemp);
                     arrz[i,j] = ztemp;
-                    Zoom_XY(xtemp, ytemp, ztemp,
+                    Zoom_G(xtemp, ytemp, ztemp,
                             out x, out y);
                     gr.FillEllipse(Brushes.Black, x, y, 3, 3);
                 }
@@ -138,7 +138,7 @@ namespace ForPractice
                     yval = h0 + h * j * t;
                     zval = Lagrange.InterpolateLagrange3D(xval, yval, arrx, arry, arrz, arrx.Length);
                     zInter[i, j] = zval;
-                    Zoom_XY(xval, yval, zval, out x, out y);
+                    Zoom_G(xval, yval, zval, out x, out y);
                     gr.FillEllipse(Brushes.Black, x, y, 3, 3);
                 }
             }
@@ -147,7 +147,7 @@ namespace ForPractice
             ValueFuncMin(zInter);
         }
 
-        private void Zoom_XY(double x, double y, double z, out int xx, out int yy)
+        private void Zoom_G(double x, double y, double z, out int xx, out int yy)
         {
             double xn, yn;
             double rx, ry, rz;
@@ -158,6 +158,9 @@ namespace ForPractice
             //     (z - z0) * Math.Sin(beta);
             //rz = ((x - x0) * Math.Sin(alfa) + (y - y0) * Math.Cos(alfa)) * Math.Sin(beta) +
             //     (z - z0) * Math.Cos(beta);
+            
+            
+            //но так как СК строить во круг точки (0;0;0), то формулу можно представить в таком виде
             rx = x  * Math.Cos(alfa) - y * Math.Sin(alfa);
             ry = (x * Math.Sin(alfa) + y * Math.Cos(alfa)) * Math.Cos(beta) -
                  (z  * Math.Sin(beta));
@@ -173,7 +176,7 @@ namespace ForPractice
 
         private void AmountPointers(int amt)
         {
-            string st = $"Кол-во точек {amt}";
+            string st = $"Кол-во nx*ny точек {amt}";
             gr.DrawString(st, new Font(FontFamily.GenericSansSerif, 12), new SolidBrush(Color.Black), 0, 32);
         }
 
@@ -181,21 +184,21 @@ namespace ForPractice
         {
             // рисование осей
             // ось X
-            Zoom_XY(-0.3, 0, 0, out xx1, out yy1);
-            Zoom_XY(2.5, 0, 0, out xx2, out yy2);
+            Zoom_G(-0.3, 0, 0, out xx1, out yy1);
+            Zoom_G(2.5, 0, 0, out xx2, out yy2);
 
             gr.DrawLine(p, xx1, yy1, xx2, yy2);
             gr.DrawString("X", font, b, xx2 + 3, yy2);
 
             // ось Y
-            Zoom_XY(0, -0.3, 0, out xx1, out yy1);
-            Zoom_XY(0, 2.5, 0, out xx2, out yy2);
+            Zoom_G(0, -0.3, 0, out xx1, out yy1);
+            Zoom_G(0, 2.5, 0, out xx2, out yy2);
             gr.DrawLine(p, xx1, yy1, xx2, yy2);
             gr.DrawString("Y", font, b, xx2 + 3, yy2);
 
             // ось Z
-            Zoom_XY(0, 0, -0.3, out xx1, out yy1);
-            Zoom_XY(0, 0, 2.5, out xx2, out yy2);
+            Zoom_G(0, 0, -0.3, out xx1, out yy1);
+            Zoom_G(0, 0, 2.5, out xx2, out yy2);
             gr.DrawLine(p, xx1, yy1, xx2, yy2);
             gr.DrawString("Z", font, b, xx2 + 3, yy2 - 3);
 
@@ -205,15 +208,15 @@ namespace ForPractice
             {
                 int t_X, t_Y;
 
-                Zoom_XY(z, 0, 0, out t_X, out t_Y);
+                Zoom_G(z, 0, 0, out t_X, out t_Y);
                 gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
                 gr.DrawString(z.ToString(), font, b, t_X + 3, t_Y);
 
-                Zoom_XY(0, z, 0, out t_X, out t_Y);
+                Zoom_G(0, z, 0, out t_X, out t_Y);
                 gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
                 gr.DrawString(z.ToString(), font, b, t_X + 3, t_Y);
 
-                Zoom_XY(0, 0, z, out t_X, out t_Y);
+                Zoom_G(0, 0, z, out t_X, out t_Y);
                 gr.FillEllipse(Brushes.Red, t_X, t_Y, 6, 6);
                 gr.DrawString(z.ToString(), font, b, t_X + 3, t_Y);
             }
