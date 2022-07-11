@@ -151,19 +151,17 @@ namespace ForPractice
         {
             double xn, yn;
             double rx, ry, rz;
-            //Формула преобразования системы координат в 3-х мерном пространстве относительно точки(x0;y0;z0;)
-            //и углов (alfa,beta)
+            //Формула преобразования системы координат в 3-х мерном пространстве относительно точки(x0;y0;z0;) и углов (alfa,beta)
             //rx = (x - x0) * Math.Cos(alfa) - (y - y0) * Math.Sin(alfa);
             //ry = ((x - x0) * Math.Sin(alfa) + (y - y0) * Math.Cos(alfa)) * Math.Cos(beta) -
             //     (z - z0) * Math.Sin(beta);
             //rz = ((x - x0) * Math.Sin(alfa) + (y - y0) * Math.Cos(alfa)) * Math.Sin(beta) +
             //     (z - z0) * Math.Cos(beta);
-            
-            
+
+
             //но так как СК строить во круг точки (0;0;0), то формулу можно представить в таком виде
             rx = x  * Math.Cos(alfa) - y * Math.Sin(alfa);
-            ry = (x * Math.Sin(alfa) + y * Math.Cos(alfa)) * Math.Cos(beta) -
-                 (z  * Math.Sin(beta));
+            ry = (x * Math.Sin(alfa) + y * Math.Cos(alfa)) * Math.Cos(beta) - z  * Math.Sin(beta);
             rz = (x * Math.Sin(alfa) + y * Math.Cos(alfa)) * Math.Sin(beta) +
                  z * Math.Cos(beta);
             //Одноточечное проецирование на плоскость Z=0

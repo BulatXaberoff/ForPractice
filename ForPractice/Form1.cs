@@ -10,6 +10,7 @@ using WpfMath;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace ForPractice
 {
@@ -304,8 +305,10 @@ namespace ForPractice
 
         private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var s = helpProvider1.HelpNamespace;
-            Cmd(s); 
+            //var s = helpProvider1.HelpNamespace;
+            var t= Application.StartupPath+ "\\По работе.txt"; 
+
+            Cmd(t); 
         }
         void Cmd(string path)
         {
