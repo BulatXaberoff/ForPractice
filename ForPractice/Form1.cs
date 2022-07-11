@@ -301,5 +301,15 @@ namespace ForPractice
             G2.InterpolateGraphic(G1.GetCoordinates(), h, nx2, ny2, n);
             pictureBox2.Image = G2.GetBitmap();
         }
+
+        private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var s = helpProvider1.HelpNamespace;
+            Cmd(s); 
+        }
+        void Cmd(string path)
+        {
+            Process.Start(new ProcessStartInfo { FileName = "explorer",Arguments=$"/n,/select, {path}" });
+        }
     }
 }
