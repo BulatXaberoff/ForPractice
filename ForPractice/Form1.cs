@@ -34,6 +34,7 @@ namespace ForPractice
         {
             InitializeComponent();
             SetPicture(functions[countfunction]);
+            helpProvider1.HelpNamespace = Application.StartupPath + "\\readme.txt";
 
             G1 = new DrawG(pictureBox1.Width, pictureBox1.Height);
             G1.drawGraphic(countfunction, h, nx1, ny1,n);
@@ -299,14 +300,24 @@ namespace ForPractice
 
         private void справкаToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //var s = helpProvider1.HelpNamespace;
-            var t= Application.StartupPath+ "\\По работе.txt"; 
-
+            var t= Application.StartupPath+ "\\readme.txt";
+            
             Cmd(t); 
         }
         void Cmd(string path)
         {
-            Process.Start(new ProcessStartInfo { FileName = "explorer",Arguments=$"/n,/select, {path}" });
+            foreach (var proc in Process.GetProcessesByName("notepad"))
+            {
+                proc.Kill();
+            }
+            Process.Start(new ProcessStartInfo 
+            { FileName = "cmd",
+              Arguments=$"/c {path}",
+              UseShellExecute = false,
+              CreateNoWindow=true,
+              WindowStyle = ProcessWindowStyle.Hidden,
+            }
+            );
         }
     }
 }
