@@ -219,9 +219,9 @@
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label2.Location = new System.Drawing.Point(484, 29);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(357, 20);
+            this.label2.Size = new System.Drawing.Size(405, 20);
             this.label2.TabIndex = 5;
-            this.label2.Text = "График ее приближения по методу Лагранжа\r\n";
+            this.label2.Text = "График приближения функции по методу Лагранжа\r\n";
             // 
             // pictureBox3
             // 

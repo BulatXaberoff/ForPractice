@@ -15,7 +15,6 @@ namespace ForPractice
         public int width;
         public int height;
 
-        double n = 5;
         public double X_min, Y_min, X_max, Y_max; //величины которые представляют координаты параллепипеда,
                                                   //в котором выводит график функции
         public double A=-8; //коэффициент перспективы
@@ -33,7 +32,6 @@ namespace ForPractice
             bitmap = new Bitmap(width+10, height);
             gr = Graphics.FromImage(bitmap);
             clearSheet();
-            X_min = -n; Y_min = -n+3; X_max = n; Y_max = n;
         }
         public List<(double, double, double)> GetCoordinates()
         {
@@ -60,7 +58,6 @@ namespace ForPractice
             CountFunction = countFunc;
             coordinatesGraphicLists = new List<(double, double, double)>();
             h = 1 / h;
-            this.n = n;
             X_min = -n; Y_min = -n + 3; X_max = n; Y_max = n;
 
             const double h0 = -0.3;
@@ -112,7 +109,6 @@ namespace ForPractice
             var arrz = ValueZ(arrx, arry);
             double t = 11.0 / nx;
             h = 1 / h;
-            this.n = n;
             X_min = -n; Y_min = -n + 3; X_max = n; Y_max = n;
             const double h0 = -0.3;
             #region Шрифт и рисование оси
@@ -167,7 +163,7 @@ namespace ForPractice
             //Одноточечное проецирование на плоскость Z=0
             xn = rx / (rz / A + 1);
             yn = ry / (ry / A + 1);
-
+            //представление графика функции в с учетом размера picturebox'а и координатами параллелепипеда
             xx = (int)(width * (xn - X_min) / (X_max - X_min));
             yy = (int)(height * (yn - Y_max) / (Y_min - Y_max));
         }
