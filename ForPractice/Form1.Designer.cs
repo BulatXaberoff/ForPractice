@@ -60,7 +60,6 @@
             this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(15, 81);
             this.pictureBox1.Name = "pictureBox1";
-            this.helpProvider1.SetShowHelp(this.pictureBox1, false);
             this.pictureBox1.Size = new System.Drawing.Size(451, 327);
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -274,7 +273,6 @@
             this.MainMenuStrip = this.menuStrip1;
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.helpProvider1.SetShowHelp(this, true);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Интерполяция";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);

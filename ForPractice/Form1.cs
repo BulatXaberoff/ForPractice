@@ -13,7 +13,7 @@ namespace ForPractice
         public DrawG G1;
         public DrawG G2;
         static int countfunction = 7;
-        static double h=7;
+        static double h=7; 
 
 
         static int nx1 = 10;
